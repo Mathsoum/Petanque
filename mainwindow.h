@@ -18,9 +18,15 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
-public slots:
+private slots:
   void slotGenerateMatches();
   void slotAddNewTeam();
+  void slotEditTeam();
+  void slotActiveEditTeam(const QModelIndex &index);
+  void slotNextPhase();
+  void slotActiveNextPhaseAction();
+  void slotSetUpWinner();
+  void slotActiveSetUpWinnerAction( const QModelIndex &index );
 
 private:
   void createTestModel(TeamModel* model);
@@ -32,7 +38,9 @@ private:
 
   QAction* mGenerateMatchesAction;
   QAction* mAddNewTeamAction;
+  QAction* mEditTeamAction;
   QAction* mNextContestStateAction;
+  QAction* mSetUpWinnerAction;
 };
 
 #endif // MAINWINDOW_H

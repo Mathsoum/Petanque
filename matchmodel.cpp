@@ -1,9 +1,9 @@
 #include "matchmodel.h"
 
 #include "teammodel.h"
-#include "util.h"
 
 #include <QBrush>
+#include <QDebug>
 
 MatchModel::MatchModel(QObject *parent) :
     QAbstractItemModel(parent)
@@ -28,26 +28,29 @@ int MatchModel::rowCount(const QModelIndex &parent) const
 
 QVariant MatchModel::data(const QModelIndex &index, int role) const
 {
-    switch( role ) {
-      case Qt::DisplayRole:
-        return QVariant( index.column() == 0 ?
-                           mMatchList.at( index.row() ).teams().first.getName()
-                         : mMatchList.at( index.row() ).teams().second.getName() );
-        break;
-      case Qt::BackgroundRole:
-        if( data( index, Qt::DisplayRole ).toString().isEmpty() ) {
-          return QVariant( QBrush( Qt::Dense5Pattern ) );
-        }
-        break;
-      case Qt::ForegroundRole:
-        if( mMatchList.at( index.row() ).isFinished() ) {
-          ( QVariant( mMatchList.at( index.row() ).getWinner() ) ==  data( index, Qt::DisplayRole )) ? QVariant( Qt::darkGreen ) : QVariant( Qt::red );
-        }
-      case Qt::TextAlignmentRole:
-        return QVariant( Qt::AlignCenter );
+switch( role ) {
+  case Qt::DisplayRole:
+    return QVariant( index.column() == 0 ?
+                       mMatchList.at( index.row() )->teams().first.getName()
+                     : mMatchList.at( index.row() )->teams().second.getName() );
+    break;
+  case Qt::BackgroundRole:
+    if( data( index, Qt::DisplayRole ).toString().isEmpty() ) {
+      return QVariant( QBrush( Qt::Dense5Pattern ) );
     }
+    break;
+  case Qt::ForegroundRole:
+    if( mMatchList.at( index.row() )->isFinished() ) {
+      return ( mMatchList.at( index.row() )->getWinner().getName() == data( index, Qt::DisplayRole )) ?
+                    QBrush( Qt::green )
+                  : QBrush( Qt::red );
+    }
+    break;
+  case Qt::TextAlignmentRole:
+    return QVariant( Qt::AlignCenter );
+}
 
-    return QVariant();
+return QVariant();
 }
 
 QModelIndex MatchModel::index(int row, int column, const QModelIndex &) const
@@ -57,23 +60,37 @@ QModelIndex MatchModel::index(int row, int column, const QModelIndex &) const
 
 QModelIndex MatchModel::parent(const QModelIndex &) const
 {
-  return QModelIndex();
+    return QModelIndex();
 }
 
-void MatchModel::generateMatchList(TeamModel *teams, const QList<Match> &alreadyPlayed )
+bool MatchModel::exists(const Match &match) const
 {
-  bool firstGeneration = alreadyPlayed.isEmpty();
-
-  QList<Team> teamsList = teams->getRawData();
-
-  Util<Team>::shuffle( &teamsList );
-
-  for(int i = 0; i < teamsList.size()-1; i+=2) {
-      mMatchList.append( Match( teamsList.at( i ), teamsList.at( i + 1 ) ) );
+  bool exists = false;
+  for( QList<Match*>::const_iterator it = mMatchList.constBegin(); it != mMatchList.constEnd() && !exists; it++ ) {
+    exists |= ( *( *it ) == match );
   }
-  if(teamsList.size() % 2 != 0) {
-      mMatchList.append( Match( teamsList.back(), Team() ) );
-  }
+  return exists;
+}
 
-  beginInsertRows(QModelIndex(), 0, mMatchList.size() - 1);
+void MatchModel::addMatch( Match *match )
+{
+  beginInsertRows( QModelIndex(), mMatchList.size(), mMatchList.size());
+  mMatchList.append( match );
+  //qDebug() << "matchList.size() == " << mMatchList.size();
+  endInsertRows();
+}
+
+void MatchModel::setFinished( Match* match, bool firstWins )
+{
+  match->changeToFinished( firstWins );
+  emit dataChanged( index( mMatchList.indexOf( match ), 0 ), index( mMatchList.indexOf( match ), 1 ) );
+}
+
+int MatchModel::notFinishedYet() const
+{
+  int count = mMatchList.size();
+  Q_FOREACH( Match* match, mMatchList ) {
+    if( match->isFinished() ) --count;
+  }
+  return count;
 }

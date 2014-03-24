@@ -13,6 +13,7 @@ class Contest : public QObject
 public:
 
   enum State {
+    NOT_STARTED_YET,
     FIRST_GAME,
     SECOND_GAME,
     THIRD_GAME,
@@ -26,11 +27,17 @@ public:
 
   void initContest( void );
 
-public slots:
-  void nextState();
   QList<Match> getWinners( MatchModel* model );
   QList<Match> getLoosers( MatchModel* model );
 
+  void addMatchToCurrentPhase(const Team &initialTeam, const Team &teamAvailable);
+public slots:
+  void nextState();
+
+private:
+  void generateNextMatchList();
+  QList<Team> teamsAvailableToPlayAgainst(const Team &team, const QList<Team> &teamsToPlayAgainst );
+  QList<Team> getTeamsAlreadyBeenExempt() const;
 
 private:
   State mState;

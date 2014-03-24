@@ -14,6 +14,12 @@ public:
     FINISHED
   };
 
+  enum Winner {
+    NONE,
+    FIRST,
+    SECOND
+  };
+
   Match( const Team& first = Team(), const Team& second = Team() );
 
   QPair<Team,Team> teams() const;
@@ -22,12 +28,14 @@ public:
   void changeToFinished( bool firstWin );
 
   Team getWinner() const;
-  inline bool isFinished() const { return mFirstWin; }
+  inline bool isFinished() const { return mState == FINISHED; }
 
 private:
   QPair<Team,Team> mMatch;
   State mState;
-  bool mFirstWin;
+  Winner mWinner;
 };
+
+bool operator==( const Match &one, const Match &other );
 
 #endif // MATCH_H

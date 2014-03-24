@@ -85,7 +85,6 @@ void TeamModel::addTeam(const Team &team)
 {
     beginInsertRows(QModelIndex(), mTeamList.size(), mTeamList.size());
     mTeamList.push_back(team);
-    qDebug() << "Team " << team.getName() << " added";
     endInsertRows();
 }
 

@@ -12,7 +12,7 @@ class DialogTeam : public QDialog
   Q_OBJECT
 
 public:
-  explicit DialogTeam(QWidget *parent = 0);
+  explicit DialogTeam(const QString &name = "", const QString &club = "", QWidget *parent = 0);
   ~DialogTeam();
 
   QString getName() const;
@@ -23,7 +23,6 @@ private slots:
 
 private:
   Ui::DialogTeam *ui;
-  QString mName;
 };
 
 #endif // DIALOGTEAM_H

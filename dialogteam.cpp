@@ -3,12 +3,15 @@
 
 #include <QPushButton>
 
-DialogTeam::DialogTeam(QWidget *parent) :
+DialogTeam::DialogTeam(const QString &name, const QString &club, QWidget *parent) :
   QDialog(parent),
   ui(new Ui::DialogTeam)
 {
   ui->setupUi(this);
   ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+
+  ui->nameEdit->setText( name );
+  ui->clubEdit->setText( club );
 
   connect(ui->nameEdit, SIGNAL(textEdited(QString)), this, SLOT(nameIsModified(QString)));
 }

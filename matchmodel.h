@@ -20,12 +20,15 @@ public:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &child) const;
 
-    void generateMatchList( TeamModel* teams , const QList<Match>& alreadyPlayed = QList<Match>() );
+    inline QList<Match*> getRawData() const { return mMatchList; }
+
+    bool exists( const Match &match ) const;
+    void addMatch( Match *match );
+    void setFinished(Match *match, bool firstWins );
+    int notFinishedYet() const;
 
 private:
-
-private:
-    QList<Match> mMatchList;
+    QList<Match*> mMatchList;
 
 };
 

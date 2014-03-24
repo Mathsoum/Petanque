@@ -19,4 +19,8 @@ private:
 
 };
 
+QDataStream &operator<<(QDataStream& out, const Team& team);
+bool operator==( const Team& one, const Team& other );
+uint qHash(const Team& team);
+
 #endif // TEAM_H
