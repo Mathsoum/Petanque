@@ -19,30 +19,31 @@ MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow)
 {
-  ui->setupUi(this);
+  ui->setupUi( this );
 
-  QMenu* menu = menuBar()->addMenu("Action");
-  mGenerateMatchesAction = menu->addAction("Générer matchs");
-  mAddNewTeamAction = menu->addAction("Ajouter équipe");
-  mEditTeamAction = menu->addAction("Editer équipe");
+  QMenu* menu = menuBar()->addMenu( "Action" );
+  mGenerateMatchesAction = menu->addAction( QString::fromUtf8( "Générer matchs" ) );
+  mAddNewTeamAction = menu->addAction( QString::fromUtf8( "Ajouter équipe" ) );
+  mEditTeamAction = menu->addAction( QString::fromUtf8( "Editer équipe" ) );
 
-  mGenerateMatchesAction->setStatusTip("Génère des matchs à partir de la liste des équipes.");
-  connect(mGenerateMatchesAction, SIGNAL(triggered()), this, SLOT(slotGenerateMatches()));
+  mGenerateMatchesAction->setStatusTip( QString::fromUtf8( "Génère des matchs à partir de la liste des équipes." ) );
+  connect( mGenerateMatchesAction, SIGNAL(triggered()), this, SLOT(slotGenerateMatches()) );
 
-  mAddNewTeamAction->setStatusTip("Ajoute une équipe à la liste des équipes.");
-  connect(mAddNewTeamAction, SIGNAL(triggered()), this, SLOT(slotAddNewTeam()));
+  mAddNewTeamAction->setStatusTip( QString::fromUtf8( "Ajoute une équipe à la liste des équipes." ) );
+  connect( mAddNewTeamAction, SIGNAL(triggered()), this, SLOT(slotAddNewTeam()) );
 
-  mEditTeamAction->setStatusTip("Modifier les données d'une équipe.");
-  connect(mEditTeamAction, SIGNAL(triggered()), this, SLOT(slotEditTeam()));
+  mEditTeamAction->setStatusTip( QString::fromUtf8( "Modifier les données d'une équipe." ) );
+  connect( mEditTeamAction, SIGNAL(triggered()), this, SLOT(slotEditTeam()) );
 
   TeamModel* model = TeamModel::getInstance();
-  ui->tableView->setModel(model);
+  ui->tableView->setModel( model );
   ui->tableView->setSelectionBehavior( QAbstractItemView::SelectRows );
   ui->tableView->setSelectionMode( QAbstractItemView::SingleSelection );
-  ui->tableView->setColumnWidth(0, 200);
-  ui->tableView->setColumnWidth(1, 200);
+  ui->tableView->setColumnWidth( 0, 200 );
+  ui->tableView->setColumnWidth( 1, 200 );
+  setCentralWidget( ui->tableView );
 
-  createTestModel(model);
+  createTestModel( model, false );
 }
 
 MainWindow::~MainWindow()
@@ -52,8 +53,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::slotGenerateMatches()
 {
-  mGenerateMatchesAction->setEnabled(false);
-  mAddNewTeamAction->setEnabled(false);
+  mGenerateMatchesAction->setEnabled( false );
+  mAddNewTeamAction->setEnabled( false );
+  mEditTeamAction->setEnabled( false );
 
   mContest = new Contest();
   mContest->initContest();
@@ -61,7 +63,7 @@ void MainWindow::slotGenerateMatches()
 
   QMenu* contestMenu = menuBar()->addMenu( "Concours" );
   mNextContestStateAction = contestMenu->addAction( "Phase suivante" );
-  mNextContestStateAction->setEnabled(false);
+  mNextContestStateAction->setEnabled( false );
   connect( mNextContestStateAction, SIGNAL( triggered() ), this, SLOT( slotNextPhase() ) );
   connect( mContest->getCurrentMatchModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
            this, SLOT( slotActiveNextPhaseAction() ) );
@@ -131,28 +133,30 @@ void MainWindow::slotActiveSetUpWinnerAction( const QModelIndex& index )
   mSetUpWinnerAction->setEnabled( index.isValid() );
 }
 
-void MainWindow::createTestModel(TeamModel* model)
+void MainWindow::createTestModel( TeamModel* model, bool even )
 {
-  model->addTeam(Team("A"));
-  model->addTeam(Team("D"));
-  model->addTeam(Team("B"));
-  model->addTeam(Team("C"));
-  model->addTeam(Team("R"));
-  model->addTeam(Team("Z"));
-  model->addTeam(Team("E"));
-  model->addTeam(Team("T"));
-  model->addTeam(Team("S"));
-  model->addTeam(Team("Q"));
-  model->addTeam(Team("F"));
-  model->addTeam(Team("G"));
-  model->addTeam(Team("H"));
-  model->addTeam(Team("Y"));
-  model->addTeam(Team("J"));
-  model->addTeam(Team("U"));
-  model->addTeam(Team("I"));
-  model->addTeam(Team("K"));
-  model->addTeam(Team("L"));
-  model->addTeam(Team("O"));
-  model->addTeam(Team("V"));
+  model->addTeam( Team( "A" ) );
+  model->addTeam( Team( "D" ) );
+  model->addTeam( Team( "B" ) );
+  model->addTeam( Team( "C" ) );
+  model->addTeam( Team( "R" ) );
+  model->addTeam( Team( "Z" ) );
+  model->addTeam( Team( "E" ) );
+  model->addTeam( Team( "T" ) );
+  model->addTeam( Team( "S" ) );
+  model->addTeam( Team( "Q" ) );
+  model->addTeam( Team( "F" ) );
+  model->addTeam( Team( "G" ) );
+  model->addTeam( Team( "H" ) );
+  model->addTeam( Team( "Y" ) );
+  model->addTeam( Team( "J" ) );
+  model->addTeam( Team( "U" ) );
+  model->addTeam( Team( "I" ) );
+  model->addTeam( Team( "K" ) );
+  model->addTeam( Team( "L" ) );
+  model->addTeam( Team( "O" ) );
+  if( !even ) {
+    model->addTeam( Team("V") );
+  }
 }
 

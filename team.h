@@ -13,6 +13,9 @@ public:
     QString getName() const;
     QString getClub() const;
 
+    void setName( const QString &name );
+    void setClub( const QString &club );
+
 private:
     QString mName;
     QString mClub;

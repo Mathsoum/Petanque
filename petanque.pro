@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     matchmodel.cpp \
     match.cpp \
     dialogteam.cpp \
-    contest.cpp
+    contest.cpp \
+    setupwinnerdialog.cpp
 
 HEADERS  += mainwindow.h \
     teammodel.h \
@@ -28,7 +29,9 @@ HEADERS  += mainwindow.h \
     match.h \
     util.h \
     dialogteam.h \
-    contest.h
+    contest.h \
+    setupwinnerdialog.h
 
 FORMS    += mainwindow.ui \
-    dialogteam.ui
+    dialogteam.ui \
+    setupwinnerdialog.ui

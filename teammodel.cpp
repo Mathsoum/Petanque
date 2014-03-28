@@ -55,12 +55,29 @@ QVariant TeamModel::data(const QModelIndex &index, int role) const
   return QVariant();
 }
 
+bool TeamModel::setData( const QModelIndex &index, const QVariant &value, int role )
+{
+  if( !index.isValid() ) {
+    return false;
+  }
+  if( index.column() == 0 ) {
+    Team buff = mTeamList.at( index.row() );
+    buff.setName( value.toString() );
+    mTeamList.replace( index.row(), buff );
+  } else {
+      Team buff = mTeamList.at( index.row() );
+      buff.setClub( value.toString() );
+      mTeamList.replace( index.row(), buff );
+  }
+  return true;
+}
+
 QVariant TeamModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   switch(orientation) {
     case Qt::Horizontal:
       if( role == Qt::DisplayRole ) {
-        return QVariant( section == 0 ? "Nom équipe" : "Nom club" );
+        return QVariant( section == 0 ? QString::fromUtf8( "Nom équipe" ) : "Nom club" );
       }
       break;
     case Qt::Vertical:
@@ -84,7 +101,7 @@ QModelIndex TeamModel::parent(const QModelIndex &) const
 void TeamModel::addTeam(const Team &team)
 {
     beginInsertRows(QModelIndex(), mTeamList.size(), mTeamList.size());
-    mTeamList.push_back(team);
+    mTeamList.push_back( team );
     endInsertRows();
 }
 

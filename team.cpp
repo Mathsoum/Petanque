@@ -18,6 +18,16 @@ QString Team::getClub() const
   return mClub;
 }
 
+void Team::setName(const QString &name)
+{
+  mName = name;
+}
+
+void Team::setClub(const QString &club)
+{
+  mClub = club;
+}
+
 bool operator==( const Team& one, const Team& other ) {
   return one.getName() == other.getName() && one.getClub() == other.getClub();
 }

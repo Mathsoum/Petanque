@@ -4,6 +4,7 @@
 
 #include <QBrush>
 #include <QDebug>
+#include <QFont>
 
 MatchModel::MatchModel(QObject *parent) :
     QAbstractItemModel(parent)
@@ -37,15 +38,19 @@ switch( role ) {
   case Qt::BackgroundRole:
     if( data( index, Qt::DisplayRole ).toString().isEmpty() ) {
       return QVariant( QBrush( Qt::Dense5Pattern ) );
-    }
-    break;
-  case Qt::ForegroundRole:
-    if( mMatchList.at( index.row() )->isFinished() ) {
+    } else if( mMatchList.at( index.row() )->isFinished() ) {
       return ( mMatchList.at( index.row() )->getWinner().getName() == data( index, Qt::DisplayRole )) ?
-                    QBrush( Qt::green )
-                  : QBrush( Qt::red );
+                    QBrush( QColor(105, 220, 140), Qt::Dense6Pattern )
+                  : QBrush( QColor(255, 128, 128), Qt::Dense6Pattern );
     }
     break;
+  case Qt::FontRole:
+    {
+      QFont font;
+      font.setBold( mMatchList.at( index.row() )->isFinished() );
+      return font;
+      break;
+    }
   case Qt::TextAlignmentRole:
     return QVariant( Qt::AlignCenter );
 }

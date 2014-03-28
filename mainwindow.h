@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+class QModelIndex;
 class TeamModel;
 class Contest;
 
@@ -22,14 +23,14 @@ private slots:
   void slotGenerateMatches();
   void slotAddNewTeam();
   void slotEditTeam();
-  void slotActiveEditTeam(const QModelIndex &index);
+  void slotActiveEditTeam( const QModelIndex &index );
   void slotNextPhase();
   void slotActiveNextPhaseAction();
   void slotSetUpWinner();
   void slotActiveSetUpWinnerAction( const QModelIndex &index );
 
 private:
-  void createTestModel(TeamModel* model);
+  void createTestModel( TeamModel* model, bool even );
 
 private:
   Ui::MainWindow *ui;
