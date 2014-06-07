@@ -6,6 +6,7 @@
 class QModelIndex;
 class TeamModel;
 class Contest;
+class RegistrationWidget;
 
 namespace Ui {
 class MainWindow;
@@ -20,20 +21,22 @@ public:
   ~MainWindow();
 
 private slots:
-  void slotGenerateMatches();
-  void slotAddNewTeam();
-  void slotEditTeam();
-  void slotActiveEditTeam( const QModelIndex &index );
-  void slotNextPhase();
-  void slotActiveNextPhaseAction();
-  void slotSetUpWinner();
-  void slotActiveSetUpWinnerAction( const QModelIndex &index );
+  void generateMatchesSlot();
+  void addNewTeamSlot();
+  void deleteTeamSlot();
+  void editTeamSlot();
+  void activeEditTeamSlot( const QModelIndex &index );
+  void nextPhaseSlot();
+  void activeNextPhaseActionSlot();
+  void setUpWinnerSlot();
+  void activeSetUpWinnerActionSlot( const QModelIndex &index );
 
 private:
   void createTestModel( TeamModel* model, bool even );
 
 private:
   Ui::MainWindow *ui;
+  RegistrationWidget* mRegistrationWidget;
   QString mNewTeamName;
   Contest* mContest;
 

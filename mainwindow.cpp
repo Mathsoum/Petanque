@@ -6,6 +6,7 @@
 #include "dialogteam.h"
 #include "setupwinnerdialog.h"
 #include "contest.h"
+#include "registrationwidget.h"
 
 #include <QListView>
 #include <QDialog>
@@ -14,6 +15,7 @@
 #include <QMenu>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QTableView>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -27,21 +29,23 @@ MainWindow::MainWindow(QWidget *parent) :
   mEditTeamAction = menu->addAction( QString::fromUtf8( "Editer équipe" ) );
 
   mGenerateMatchesAction->setStatusTip( QString::fromUtf8( "Génère des matchs à partir de la liste des équipes." ) );
-  connect( mGenerateMatchesAction, SIGNAL(triggered()), this, SLOT(slotGenerateMatches()) );
+  connect( mGenerateMatchesAction, SIGNAL(triggered()), this, SLOT(generateMatchesSlot()) );
 
   mAddNewTeamAction->setStatusTip( QString::fromUtf8( "Ajoute une équipe à la liste des équipes." ) );
-  connect( mAddNewTeamAction, SIGNAL(triggered()), this, SLOT(slotAddNewTeam()) );
+  connect( mAddNewTeamAction, SIGNAL(triggered()), this, SLOT(addNewTeamSlot()) );
 
   mEditTeamAction->setStatusTip( QString::fromUtf8( "Modifier les données d'une équipe." ) );
-  connect( mEditTeamAction, SIGNAL(triggered()), this, SLOT(slotEditTeam()) );
+  connect( mEditTeamAction, SIGNAL(triggered()), this, SLOT(editTeamSlot()) );
+
+  mRegistrationWidget = new RegistrationWidget(this);
+  setCentralWidget(mRegistrationWidget);
 
   TeamModel* model = TeamModel::getInstance();
-  ui->tableView->setModel( model );
-  ui->tableView->setSelectionBehavior( QAbstractItemView::SelectRows );
-  ui->tableView->setSelectionMode( QAbstractItemView::SingleSelection );
-  ui->tableView->setColumnWidth( 0, 200 );
-  ui->tableView->setColumnWidth( 1, 200 );
-  setCentralWidget( ui->tableView );
+  mRegistrationWidget->getTeamView()->setModel( model );
+  mRegistrationWidget->getTeamView()->setSelectionBehavior( QAbstractItemView::SelectRows );
+  mRegistrationWidget->getTeamView()->setSelectionMode( QAbstractItemView::SingleSelection );
+  mRegistrationWidget->getTeamView()->setColumnWidth( 0, 200 );
+  mRegistrationWidget->getTeamView()->setColumnWidth( 1, 200 );
 
   createTestModel( model, false );
 }
@@ -51,7 +55,7 @@ MainWindow::~MainWindow()
   delete ui;
 }
 
-void MainWindow::slotGenerateMatches()
+void MainWindow::generateMatchesSlot()
 {
   mGenerateMatchesAction->setEnabled( false );
   mAddNewTeamAction->setEnabled( false );
@@ -59,26 +63,26 @@ void MainWindow::slotGenerateMatches()
 
   mContest = new Contest();
   mContest->initContest();
-  ui->tableView->setModel( mContest->getCurrentMatchModel() );
+  mRegistrationWidget->getTeamView()->setModel( mContest->getCurrentMatchModel() );
 
   QMenu* contestMenu = menuBar()->addMenu( "Concours" );
   mNextContestStateAction = contestMenu->addAction( "Phase suivante" );
   mNextContestStateAction->setEnabled( false );
-  connect( mNextContestStateAction, SIGNAL( triggered() ), this, SLOT( slotNextPhase() ) );
+  connect( mNextContestStateAction, SIGNAL( triggered() ), this, SLOT( nextPhaseSlot() ) );
   connect( mContest->getCurrentMatchModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
-           this, SLOT( slotActiveNextPhaseAction() ) );
+           this, SLOT( activeNextPhaseActionSlot() ) );
 
 
   mSetUpWinnerAction = contestMenu->addAction( "Saisir gagnant..." );
   mSetUpWinnerAction->setEnabled(false);
-  connect( mSetUpWinnerAction, SIGNAL( triggered() ), this, SLOT( slotSetUpWinner() ) );
-  connect( ui->tableView->selectionModel(),
+  connect( mSetUpWinnerAction, SIGNAL( triggered() ), this, SLOT( setUpWinnerSlot() ) );
+  connect( mRegistrationWidget->getTeamView()->selectionModel(),
            SIGNAL( currentRowChanged( QModelIndex, QModelIndex ) ),
            this,
-           SLOT( slotActiveSetUpWinnerAction( QModelIndex ) ) );
+           SLOT( activeSetUpWinnerActionSlot( QModelIndex ) ) );
 }
 
-void MainWindow::slotAddNewTeam()
+void MainWindow::addNewTeamSlot()
 {
   DialogTeam team;
   if( team.exec() == QDialog::Accepted ) {
@@ -86,9 +90,13 @@ void MainWindow::slotAddNewTeam()
   }
 }
 
-void MainWindow::slotEditTeam()
+void MainWindow::deleteTeamSlot()
 {
-  QModelIndex selection = ui->tableView->selectionModel()->currentIndex();
+}
+
+void MainWindow::editTeamSlot()
+{
+  QModelIndex selection = mRegistrationWidget->getTeamView()->currentIndex();
   QModelIndex firstCol = TeamModel::getInstance()->index( selection.row(), 0 );
   QModelIndex secondCol = TeamModel::getInstance()->index( selection.row(), 1 );
   DialogTeam team( TeamModel::getInstance()->data( firstCol ).toString(), TeamModel::getInstance()->data( secondCol ).toString() );
@@ -98,29 +106,29 @@ void MainWindow::slotEditTeam()
   }
 }
 
-void MainWindow::slotActiveEditTeam( const QModelIndex& index  )
+void MainWindow::activeEditTeamSlot( const QModelIndex& index  )
 {
   mEditTeamAction->setEnabled( index.isValid() );
 }
 
-void MainWindow::slotNextPhase()
+void MainWindow::nextPhaseSlot()
 {
   mContest->nextState();
-  ui->tableView->setModel( mContest->getCurrentMatchModel() );
+  mRegistrationWidget->getTeamView()->setModel( mContest->getCurrentMatchModel() );
   connect( mContest->getCurrentMatchModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
-           this, SLOT( slotActiveNextPhaseAction() ) );
+           this, SLOT( activeNextPhaseActionSlot() ) );
 }
 
-void MainWindow::slotActiveNextPhaseAction()
+void MainWindow::activeNextPhaseActionSlot()
 {
   bool finished = mContest->getCurrentMatchModel()->notFinishedYet() == 0;
   mNextContestStateAction->setEnabled( finished );
 }
 
-void MainWindow::slotSetUpWinner()
+void MainWindow::setUpWinnerSlot()
 {
   SetUpWinnerDialog dialog;
-  Match* selectedMatch = mContest->getCurrentMatchModel()->getRawData().at( ui->tableView->selectionModel()->currentIndex().row() );
+  Match* selectedMatch = mContest->getCurrentMatchModel()->getRawData().at( mRegistrationWidget->getTeamView()->selectionModel()->currentIndex().row() );
   dialog.setMatch( selectedMatch );
 
   if( dialog.exec() == QDialog::Accepted ) {
@@ -128,7 +136,7 @@ void MainWindow::slotSetUpWinner()
   }
 }
 
-void MainWindow::slotActiveSetUpWinnerAction( const QModelIndex& index )
+void MainWindow::activeSetUpWinnerActionSlot( const QModelIndex& index )
 {
   mSetUpWinnerAction->setEnabled( index.isValid() );
 }

@@ -115,7 +115,7 @@ void Contest::addMatchToCurrentPhase(const Team& initialTeam, const Team& teamAv
         mFourthPhase->addMatch( new Match( initialTeam, teamAvailable ) );
       break;
     case FOURTH_GAME:
-      // Should not go there
+      // Unreachable
       break;
     }
 }
