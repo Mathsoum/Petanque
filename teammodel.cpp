@@ -105,6 +105,13 @@ void TeamModel::addTeam(const Team &team)
     endInsertRows();
 }
 
+void TeamModel::removeTeam(const Team &team)
+{
+    beginRemoveRows(QModelIndex(), mTeamList.indexOf(team), mTeamList.indexOf(team));
+    mTeamList.removeOne(team);
+    endRemoveRows();
+}
+
 QList<Team> TeamModel::getRawData() const
 {
     return mTeamList;

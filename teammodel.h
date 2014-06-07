@@ -21,6 +21,7 @@ public:
     QModelIndex parent(const QModelIndex &child) const;
 
     void addTeam(const Team& team);
+    void removeTeam(const Team& team);
     QList<Team> getRawData() const;
 
 private:
