@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     dialogteam.cpp \
     contest.cpp \
     setupwinnerdialog.cpp \
-    registrationwidget.cpp
+    registrationwidget.cpp \
+    fourmatchescontestwidget.cpp
 
 HEADERS  += mainwindow.h \
     teammodel.h \
@@ -32,12 +33,14 @@ HEADERS  += mainwindow.h \
     dialogteam.h \
     contest.h \
     setupwinnerdialog.h \
-    registrationwidget.h
+    registrationwidget.h \
+    fourmatchescontestwidget.h
 
 FORMS    += mainwindow.ui \
     dialogteam.ui \
     setupwinnerdialog.ui \
-    registrationwidget.ui
+    registrationwidget.ui \
+    fourmatchescontestwidget.ui
 
 RESOURCES += \
     resource.qrc
