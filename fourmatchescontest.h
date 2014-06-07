@@ -7,7 +7,7 @@
 
 class MatchModel;
 
-class Contest : public QObject
+class FourMatchesContest : public QObject
 {
   Q_OBJECT
 public:
@@ -20,10 +20,11 @@ public:
     FOURTH_GAME,
   };
 
-  Contest(QObject *parent = 0);
-  ~Contest();
+  FourMatchesContest(QObject *parent = 0);
+  ~FourMatchesContest();
 
   MatchModel *getCurrentMatchModel() const;
+  QList<MatchModel *> getMatchModelList() const;
 
   void initContest( void );
 

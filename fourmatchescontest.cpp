@@ -1,4 +1,4 @@
-#include "contest.h"
+#include "fourmatchescontest.h"
 #include "util.h"
 
 #include "matchmodel.h"
@@ -6,7 +6,7 @@
 
 #include <QDebug>
 
-Contest::Contest(QObject *)
+FourMatchesContest::FourMatchesContest(QObject *)
 {
   mState = NOT_STARTED_YET;
 
@@ -16,7 +16,7 @@ Contest::Contest(QObject *)
   mFourthPhase = NULL;
 }
 
-Contest::~Contest()
+FourMatchesContest::~FourMatchesContest()
 {
   switch( mState ) {
     case NOT_STARTED_YET:
@@ -34,7 +34,7 @@ Contest::~Contest()
 
 }
 
-MatchModel *Contest::getCurrentMatchModel() const
+MatchModel *FourMatchesContest::getCurrentMatchModel() const
 {
   switch( mState ) {
     case NOT_STARTED_YET:
@@ -55,22 +55,22 @@ MatchModel *Contest::getCurrentMatchModel() const
     }
 }
 
-void Contest::initContest()
+void FourMatchesContest::initContest()
 {
     nextState();
 }
 
-QList<Match> Contest::getWinners( MatchModel *model )
+QList<Match> FourMatchesContest::getWinners( MatchModel *model )
 {
   return QList<Match>();
 }
 
-QList<Match> Contest::getLoosers( MatchModel *model )
+QList<Match> FourMatchesContest::getLoosers( MatchModel *model )
 {
   return QList<Match>();
 }
 
-void Contest::nextState()
+void FourMatchesContest::nextState()
 {
   switch( mState ) {
     case NOT_STARTED_YET:
@@ -99,7 +99,7 @@ void Contest::nextState()
     }
 }
 
-void Contest::addMatchToCurrentPhase(const Team& initialTeam, const Team& teamAvailable)
+void FourMatchesContest::addMatchToCurrentPhase(const Team& initialTeam, const Team& teamAvailable)
 {
     switch( mState ) {
     case NOT_STARTED_YET:
@@ -120,7 +120,7 @@ void Contest::addMatchToCurrentPhase(const Team& initialTeam, const Team& teamAv
     }
 }
 
-void Contest::generateNextMatchList()
+void FourMatchesContest::generateNextMatchList()
 {
   QList<Team> teamsList = TeamModel::getInstance()->getRawData();
 
@@ -161,7 +161,7 @@ void Contest::generateNextMatchList()
   }
 }
 
-QList<Team> Contest::teamsAvailableToPlayAgainst(const Team& team, const QList<Team> &teamsToPlayAgainst )
+QList<Team> FourMatchesContest::teamsAvailableToPlayAgainst(const Team& team, const QList<Team> &teamsToPlayAgainst )
 {
   QList<Team> ret = teamsToPlayAgainst.mid( 1 );
 
@@ -194,7 +194,7 @@ QList<Team> Contest::teamsAvailableToPlayAgainst(const Team& team, const QList<T
   return ret;
 }
 
-QList<Team> Contest::getTeamsAlreadyBeenExempt() const
+QList<Team> FourMatchesContest::getTeamsAlreadyBeenExempt() const
 {
   QSet<Team> ret;
 
@@ -214,3 +214,11 @@ QList<Team> Contest::getTeamsAlreadyBeenExempt() const
   return ret.toList();
 }
 
+
+
+QList<MatchModel *> FourMatchesContest::getMatchModelList() const
+{
+  QList<MatchModel *> list;
+  list << mFirstPhase << mSecondPhase << mThirdPhase << mFourthPhase;
+  return list;
+}

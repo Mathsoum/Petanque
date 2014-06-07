@@ -19,10 +19,10 @@ SOURCES += main.cpp\
     matchmodel.cpp \
     match.cpp \
     dialogteam.cpp \
-    contest.cpp \
     setupwinnerdialog.cpp \
     registrationwidget.cpp \
-    fourmatchescontestwidget.cpp
+    fourmatchescontestwidget.cpp \
+    fourmatchescontest.cpp
 
 HEADERS  += mainwindow.h \
     teammodel.h \
@@ -31,10 +31,10 @@ HEADERS  += mainwindow.h \
     match.h \
     util.h \
     dialogteam.h \
-    contest.h \
     setupwinnerdialog.h \
     registrationwidget.h \
-    fourmatchescontestwidget.h
+    fourmatchescontestwidget.h \
+    fourmatchescontest.h
 
 FORMS    += mainwindow.ui \
     dialogteam.ui \

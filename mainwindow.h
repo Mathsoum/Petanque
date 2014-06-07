@@ -5,8 +5,9 @@
 
 class QModelIndex;
 class TeamModel;
-class Contest;
+class FourMatchesContest;
 class RegistrationWidget;
+class FourMatchesContestWidget;
 
 namespace Ui {
 class MainWindow;
@@ -37,8 +38,10 @@ private:
 private:
   Ui::MainWindow *ui;
   RegistrationWidget* mRegistrationWidget;
+  FourMatchesContestWidget* mFourMatchesContestWidget;
+
   QString mNewTeamName;
-  Contest* mContest;
+  FourMatchesContest* mContest;
 
   QAction* mGenerateMatchesAction;
   QAction* mAddNewTeamAction;

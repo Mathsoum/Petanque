@@ -5,8 +5,9 @@
 #include "matchmodel.h"
 #include "dialogteam.h"
 #include "setupwinnerdialog.h"
-#include "contest.h"
+#include "fourmatchescontest.h"
 #include "registrationwidget.h"
+#include "fourmatchescontestwidget.h"
 
 #include <QListView>
 #include <QDialog>
@@ -37,8 +38,9 @@ MainWindow::MainWindow(QWidget *parent) :
   mEditTeamAction->setStatusTip( QString::fromUtf8( "Modifier les données d'une équipe." ) );
   connect( mEditTeamAction, SIGNAL(triggered()), this, SLOT(editTeamSlot()) );
 
-  mRegistrationWidget = new RegistrationWidget(this);
+  mRegistrationWidget = new RegistrationWidget(this, this);
   setCentralWidget(mRegistrationWidget);
+  resize(mRegistrationWidget->size());
 
   TeamModel* model = TeamModel::getInstance();
   mRegistrationWidget->getTeamView()->setModel( model );
@@ -61,10 +63,14 @@ void MainWindow::generateMatchesSlot()
   mAddNewTeamAction->setEnabled( false );
   mEditTeamAction->setEnabled( false );
 
-  mContest = new Contest();
+  mContest = new FourMatchesContest();
   mContest->initContest();
-  mRegistrationWidget->getTeamView()->setModel( mContest->getCurrentMatchModel() );
 
+  mFourMatchesContestWidget = new FourMatchesContestWidget(this);
+  mFourMatchesContestWidget->getTableViewList().at(0)->setModel( mContest->getCurrentMatchModel() );
+  resize(mFourMatchesContestWidget->size());
+
+  setCentralWidget( mFourMatchesContestWidget );
   QMenu* contestMenu = menuBar()->addMenu( "Concours" );
   mNextContestStateAction = contestMenu->addAction( "Phase suivante" );
   mNextContestStateAction->setEnabled( false );
