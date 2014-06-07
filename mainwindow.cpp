@@ -44,8 +44,8 @@ MainWindow::MainWindow(QWidget *parent) :
   mRegistrationWidget->getTeamView()->setModel( model );
   mRegistrationWidget->getTeamView()->setSelectionBehavior( QAbstractItemView::SelectRows );
   mRegistrationWidget->getTeamView()->setSelectionMode( QAbstractItemView::SingleSelection );
-  mRegistrationWidget->getTeamView()->setColumnWidth( 0, 200 );
-  mRegistrationWidget->getTeamView()->setColumnWidth( 1, 200 );
+  mRegistrationWidget->getTeamView()->setColumnWidth( 0, 150 );
+  mRegistrationWidget->getTeamView()->setColumnWidth( 1, 150 );
 
   createTestModel( model, false );
 }
@@ -92,17 +92,26 @@ void MainWindow::addNewTeamSlot()
 
 void MainWindow::deleteTeamSlot()
 {
+  QModelIndex selection = mRegistrationWidget->getTeamView()->currentIndex();
+  QModelIndex teamNameIndex = TeamModel::getInstance()->index( selection.row(), 0 );
+  QModelIndex clubNameIndex = TeamModel::getInstance()->index( selection.row(), 1 );
+  TeamModel::getInstance()->removeTeam(
+    Team(
+      TeamModel::getInstance()->data( teamNameIndex ).toString(),
+      TeamModel::getInstance()->data( clubNameIndex ).toString()
+    )
+  );
 }
 
 void MainWindow::editTeamSlot()
 {
   QModelIndex selection = mRegistrationWidget->getTeamView()->currentIndex();
-  QModelIndex firstCol = TeamModel::getInstance()->index( selection.row(), 0 );
-  QModelIndex secondCol = TeamModel::getInstance()->index( selection.row(), 1 );
-  DialogTeam team( TeamModel::getInstance()->data( firstCol ).toString(), TeamModel::getInstance()->data( secondCol ).toString() );
+  QModelIndex teamNameIndex = TeamModel::getInstance()->index( selection.row(), 0 );
+  QModelIndex clubNameIndex = TeamModel::getInstance()->index( selection.row(), 1 );
+  DialogTeam team( TeamModel::getInstance()->data( teamNameIndex ).toString(), TeamModel::getInstance()->data( clubNameIndex ).toString() );
   if( team.exec() == QDialog::Accepted ) {
-      TeamModel::getInstance()->setData( firstCol, team.getName() );
-      TeamModel::getInstance()->setData( secondCol, team.getClub() );
+      TeamModel::getInstance()->setData( teamNameIndex, team.getName() );
+      TeamModel::getInstance()->setData( clubNameIndex, team.getClub() );
   }
 }
 
