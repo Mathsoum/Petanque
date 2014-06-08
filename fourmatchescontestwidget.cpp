@@ -9,12 +9,23 @@ FourMatchesContestWidget::FourMatchesContestWidget(QWidget *parent) :
 
   ui->tableView->verticalHeader()->hide();
   ui->tableView->horizontalHeader()->hide();
+  ui->tableView->setSelectionBehavior( QAbstractItemView::SelectRows );
+  ui->tableView->setSelectionMode( QAbstractItemView::SingleSelection );
+
   ui->tableView_2->verticalHeader()->hide();
   ui->tableView_2->horizontalHeader()->hide();
+  ui->tableView_2->setSelectionBehavior( QAbstractItemView::SelectRows );
+  ui->tableView_2->setSelectionMode( QAbstractItemView::SingleSelection );
+
   ui->tableView_3->verticalHeader()->hide();
   ui->tableView_3->horizontalHeader()->hide();
+  ui->tableView_3->setSelectionBehavior( QAbstractItemView::SelectRows );
+  ui->tableView_3->setSelectionMode( QAbstractItemView::SingleSelection );
+
   ui->tableView_4->verticalHeader()->hide();
   ui->tableView_4->horizontalHeader()->hide();
+  ui->tableView_4->setSelectionBehavior( QAbstractItemView::SelectRows );
+  ui->tableView_4->setSelectionMode( QAbstractItemView::SingleSelection );
 }
 
 FourMatchesContestWidget::~FourMatchesContestWidget()
