@@ -1,6 +1,8 @@
 #ifndef REGISTRATIONWIDGET_H
 #define REGISTRATIONWIDGET_H
 
+#include "team.h"
+
 #include <QWidget>
 
 class MainWindow;
@@ -19,6 +21,11 @@ public:
     ~RegistrationWidget();
 
     QTableView *getTeamView();
+
+private slots:
+    void addNewTeamSlot(const Team& newTeam);
+    void deleteTeamSlot();
+    void editTeamSlot(const Team& team);
 
 private:
     Ui::RegistrationWidget *ui;
