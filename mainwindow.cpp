@@ -30,8 +30,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
   QMenu* actionMenu = menuBar()->addMenu( "Action" );
   mGenerateMatchesAction = actionMenu->addAction( QString::fromUtf8( "Générer matchs" ) );
-  mAddNewTeamAction = actionMenu->addAction( QString::fromUtf8( "Ajouter équipe" ) );
-  mEditTeamAction = actionMenu->addAction( QString::fromUtf8( "Editer équipe" ) );
+
+  QMenu* teamMenu = menuBar()->addMenu( "Team" );
+  mAddNewTeamAction = teamMenu->addAction( QString::fromUtf8( "Ajouter équipe" ) );
+  mEditTeamAction = teamMenu->addAction( QString::fromUtf8( "Editer équipe" ) );
 
   mGenerateMatchesAction->setStatusTip( QString::fromUtf8( "Génère des matchs à partir de la liste des équipes." ) );
   connect( mGenerateMatchesAction, SIGNAL(triggered()), this, SLOT(generateMatchesSlot()) );
