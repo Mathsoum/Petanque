@@ -88,6 +88,17 @@ void MainWindow::generateMatchesSlot()
            SLOT( activeSetUpWinnerActionSlot( QModelIndex ) ) );
 }
 
+<<<<<<< HEAD
+=======
+void MainWindow::addNewTeamSlot()
+{
+  DialogTeam team;
+  if( team.exec() == QDialog::Accepted ) {
+    TeamModel::getInstance()->addTeam( Team( team.getName() ) );
+  }
+}
+
+>>>>>>> 0ee3580adb7d2f443528b05ff53f39757ffbe3c9
 void MainWindow::editTeamSlot()
 {
   QModelIndex selection = mRegistrationWidget->getTeamView()->currentIndex();
