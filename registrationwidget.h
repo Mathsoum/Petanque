@@ -5,7 +5,6 @@
 
 #include <QWidget>
 
-class MainWindow;
 class QTableView;
 
 namespace Ui {
@@ -17,7 +16,7 @@ class RegistrationWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit RegistrationWidget(MainWindow* mainWindow, QWidget *parent = 0);
+    explicit RegistrationWidget(QWidget *parent = 0);
     ~RegistrationWidget();
 
     QTableView *getTeamView();
@@ -25,12 +24,10 @@ public:
 public slots:
     void addNewTeamSlot();
     void deleteTeamSlot();
-    void editTeamSlot(const Team& team);
+    void editTeamSlot();
 
 private:
     Ui::RegistrationWidget *ui;
-
-    MainWindow* parent;
 };
 
 #endif // REGISTRATIONWIDGET_H

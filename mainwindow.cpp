@@ -24,14 +24,14 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi( this );
 
-  mRegistrationWidget = new RegistrationWidget(this, this);
+  mRegistrationWidget = new RegistrationWidget(this);
   setCentralWidget(mRegistrationWidget);
   resize(mRegistrationWidget->size());
 
-  QMenu* menu = menuBar()->addMenu( "Action" );
-  mGenerateMatchesAction = menu->addAction( QString::fromUtf8( "Générer matchs" ) );
-  mAddNewTeamAction = menu->addAction( QString::fromUtf8( "Ajouter équipe" ) );
-  mEditTeamAction = menu->addAction( QString::fromUtf8( "Editer équipe" ) );
+  QMenu* actionMenu = menuBar()->addMenu( "Action" );
+  mGenerateMatchesAction = actionMenu->addAction( QString::fromUtf8( "Générer matchs" ) );
+  mAddNewTeamAction = actionMenu->addAction( QString::fromUtf8( "Ajouter équipe" ) );
+  mEditTeamAction = actionMenu->addAction( QString::fromUtf8( "Editer équipe" ) );
 
   mGenerateMatchesAction->setStatusTip( QString::fromUtf8( "Génère des matchs à partir de la liste des équipes." ) );
   connect( mGenerateMatchesAction, SIGNAL(triggered()), this, SLOT(generateMatchesSlot()) );
@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect( mAddNewTeamAction, SIGNAL(triggered()), mRegistrationWidget, SLOT(addNewTeamSlot()) );
 
   mEditTeamAction->setStatusTip( QString::fromUtf8( "Modifier les données d'une équipe." ) );
-  connect( mEditTeamAction, SIGNAL(triggered()), this, SLOT(editTeamSlot()) );
+  connect( mEditTeamAction, SIGNAL(triggered()), mRegistrationWidget, SLOT(editTeamSlot()) );
 
   TeamModel* model = TeamModel::getInstance();
   mRegistrationWidget->getTeamView()->setModel( model );
@@ -86,18 +86,6 @@ void MainWindow::generateMatchesSlot()
            SIGNAL( currentRowChanged( QModelIndex, QModelIndex ) ),
            this,
            SLOT( activeSetUpWinnerActionSlot( QModelIndex ) ) );
-}
-
-void MainWindow::editTeamSlot()
-{
-  QModelIndex selection = mRegistrationWidget->getTeamView()->currentIndex();
-  QModelIndex teamNameIndex = TeamModel::getInstance()->index( selection.row(), 0 );
-  QModelIndex clubNameIndex = TeamModel::getInstance()->index( selection.row(), 1 );
-  DialogTeam team( TeamModel::getInstance()->data( teamNameIndex ).toString(), TeamModel::getInstance()->data( clubNameIndex ).toString() );
-  if( team.exec() == QDialog::Accepted ) {
-      TeamModel::getInstance()->setData( teamNameIndex, team.getName() );
-      TeamModel::getInstance()->setData( clubNameIndex, team.getClub() );
-  }
 }
 
 void MainWindow::activeEditTeamSlot( const QModelIndex& index  )
