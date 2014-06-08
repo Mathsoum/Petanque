@@ -96,19 +96,6 @@ void MainWindow::addNewTeamSlot()
   }
 }
 
-void MainWindow::deleteTeamSlot()
-{
-  QModelIndex selection = mRegistrationWidget->getTeamView()->currentIndex();
-  QModelIndex teamNameIndex = TeamModel::getInstance()->index( selection.row(), 0 );
-  QModelIndex clubNameIndex = TeamModel::getInstance()->index( selection.row(), 1 );
-  TeamModel::getInstance()->removeTeam(
-    Team(
-      TeamModel::getInstance()->data( teamNameIndex ).toString(),
-      TeamModel::getInstance()->data( clubNameIndex ).toString()
-    )
-  );
-}
-
 void MainWindow::editTeamSlot()
 {
   QModelIndex selection = mRegistrationWidget->getTeamView()->currentIndex();
