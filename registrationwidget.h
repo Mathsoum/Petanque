@@ -22,13 +22,8 @@ public:
 
     QTableView *getTeamView();
 
-<<<<<<< HEAD
 public slots:
     void addNewTeamSlot();
-=======
-private slots:
-    void addNewTeamSlot(const Team& newTeam);
->>>>>>> 0ee3580adb7d2f443528b05ff53f39757ffbe3c9
     void deleteTeamSlot();
     void editTeamSlot(const Team& team);
 
