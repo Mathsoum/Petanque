@@ -72,10 +72,11 @@ void MainWindow::generateMatchesSlot()
   mFourMatchesContest->initContest();
 
   mFourMatchesContestWidget = new FourMatchesContestWidget(this);
-  mFourMatchesContestWidget->getTableViewList().at(0)->setModel( mFourMatchesContest->getCurrentMatchModel() );
-  resize(mFourMatchesContestWidget->size());
-
+  QTableView* view = mFourMatchesContestWidget->getTableViewList().at(0);
+  view->setModel( mFourMatchesContest->getCurrentMatchModel() );
   setCentralWidget( mFourMatchesContestWidget );
+  resize( mFourMatchesContestWidget->size() );
+
   QMenu* contestMenu = menuBar()->addMenu( "Concours" );
   mNextContestStateAction = contestMenu->addAction( "Phase suivante" );
   mNextContestStateAction->setEnabled( false );
@@ -101,9 +102,8 @@ void MainWindow::activeEditTeamSlot( const QModelIndex& index  )
 void MainWindow::nextPhaseSlot()
 {
   mFourMatchesContest->nextState();
-  mFourMatchesContestWidget->getTableViewList().at( mFourMatchesContest->currentPhase() )->setModel(
-    mFourMatchesContest->getCurrentMatchModel()
-  );
+  QTableView* view = mFourMatchesContestWidget->getTableViewList().at( mFourMatchesContest->currentPhase() );
+  view->setModel(mFourMatchesContest->getCurrentMatchModel());
 
   connect( mFourMatchesContest->getCurrentMatchModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
            this, SLOT( activeNextPhaseActionSlot() ) );

@@ -19,6 +19,10 @@ public:
 
     QList<QTableView*> getTableViewList() const;
 
+public slots:
+    void teamRadioSelctionChanged();
+    void teamViewSelectionChanged();
+
 private:
     Ui::FourMatchesContestWidget *ui;
 };
