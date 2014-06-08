@@ -41,7 +41,7 @@ private:
   FourMatchesContestWidget* mFourMatchesContestWidget;
 
   QString mNewTeamName;
-  FourMatchesContest* mContest;
+  FourMatchesContest* mFourMatchesContest;
 
   QAction* mGenerateMatchesAction;
   QAction* mAddNewTeamAction;

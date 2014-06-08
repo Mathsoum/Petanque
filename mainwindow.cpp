@@ -63,11 +63,11 @@ void MainWindow::generateMatchesSlot()
   mAddNewTeamAction->setEnabled( false );
   mEditTeamAction->setEnabled( false );
 
-  mContest = new FourMatchesContest();
-  mContest->initContest();
+  mFourMatchesContest = new FourMatchesContest();
+  mFourMatchesContest->initContest();
 
   mFourMatchesContestWidget = new FourMatchesContestWidget(this);
-  mFourMatchesContestWidget->getTableViewList().at(0)->setModel( mContest->getCurrentMatchModel() );
+  mFourMatchesContestWidget->getTableViewList().at(0)->setModel( mFourMatchesContest->getCurrentMatchModel() );
   resize(mFourMatchesContestWidget->size());
 
   setCentralWidget( mFourMatchesContestWidget );
@@ -75,14 +75,14 @@ void MainWindow::generateMatchesSlot()
   mNextContestStateAction = contestMenu->addAction( "Phase suivante" );
   mNextContestStateAction->setEnabled( false );
   connect( mNextContestStateAction, SIGNAL( triggered() ), this, SLOT( nextPhaseSlot() ) );
-  connect( mContest->getCurrentMatchModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
+  connect( mFourMatchesContest->getCurrentMatchModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
            this, SLOT( activeNextPhaseActionSlot() ) );
 
 
   mSetUpWinnerAction = contestMenu->addAction( "Saisir gagnant..." );
   mSetUpWinnerAction->setEnabled(false);
   connect( mSetUpWinnerAction, SIGNAL( triggered() ), this, SLOT( setUpWinnerSlot() ) );
-  connect( mRegistrationWidget->getTeamView()->selectionModel(),
+  connect( mFourMatchesContestWidget->getTableViewList().at(0)->selectionModel(),
            SIGNAL( currentRowChanged( QModelIndex, QModelIndex ) ),
            this,
            SLOT( activeSetUpWinnerActionSlot( QModelIndex ) ) );
@@ -128,26 +128,31 @@ void MainWindow::activeEditTeamSlot( const QModelIndex& index  )
 
 void MainWindow::nextPhaseSlot()
 {
-  mContest->nextState();
-  mRegistrationWidget->getTeamView()->setModel( mContest->getCurrentMatchModel() );
-  connect( mContest->getCurrentMatchModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
+  mFourMatchesContest->nextState();
+  mFourMatchesContestWidget->getTableViewList().at( mFourMatchesContest->currentPhase() )->setModel(
+    mFourMatchesContest->getCurrentMatchModel()
+  );
+
+  connect( mFourMatchesContest->getCurrentMatchModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
            this, SLOT( activeNextPhaseActionSlot() ) );
 }
 
 void MainWindow::activeNextPhaseActionSlot()
 {
-  bool finished = mContest->getCurrentMatchModel()->notFinishedYet() == 0;
+  bool finished = mFourMatchesContest->getCurrentMatchModel()->notFinishedYet() == 0;
   mNextContestStateAction->setEnabled( finished );
 }
 
 void MainWindow::setUpWinnerSlot()
 {
   SetUpWinnerDialog dialog;
-  Match* selectedMatch = mContest->getCurrentMatchModel()->getRawData().at( mRegistrationWidget->getTeamView()->selectionModel()->currentIndex().row() );
+  Match* selectedMatch = mFourMatchesContest->getCurrentMatchModel()->getRawData().at(
+    mFourMatchesContestWidget->getTableViewList().at(0)->selectionModel()->currentIndex().row()
+  );
   dialog.setMatch( selectedMatch );
 
   if( dialog.exec() == QDialog::Accepted ) {
-    mContest->getCurrentMatchModel()->setFinished( selectedMatch, dialog.firstWins() );
+    mFourMatchesContest->getCurrentMatchModel()->setFinished( selectedMatch, dialog.firstWins() );
   }
 }
 

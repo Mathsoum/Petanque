@@ -49,7 +49,7 @@ MatchModel *FourMatchesContest::getCurrentMatchModel() const
     case THIRD_GAME:
       return mThirdPhase;
       break;
-    default: // FOURTH_GAME
+    case FOURTH_GAME:
       return mFourthPhase;
       break;
     }
@@ -94,7 +94,7 @@ void FourMatchesContest::nextState()
       mState = FOURTH_GAME;
       break;
     case FOURTH_GAME:
-      // Should not go there
+      // Unreachable
       break;
     }
 }
@@ -120,6 +120,16 @@ void FourMatchesContest::addMatchToCurrentPhase(const Team& initialTeam, const T
     }
 }
 
+int FourMatchesContest::currentPhase() const
+{
+    return mState;
+}
+
+/* TODO Old system. Random generation of matches.
+ *
+ * Should generate next matches on the fly !
+ * Even over few next phases
+ */
 void FourMatchesContest::generateNextMatchList()
 {
   QList<Team> teamsList = TeamModel::getInstance()->getRawData();

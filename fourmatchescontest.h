@@ -13,11 +13,11 @@ class FourMatchesContest : public QObject
 public:
 
   enum State {
-    NOT_STARTED_YET,
-    FIRST_GAME,
-    SECOND_GAME,
-    THIRD_GAME,
-    FOURTH_GAME,
+    NOT_STARTED_YET = 0,
+    FIRST_GAME      = 1,
+    SECOND_GAME     = 2,
+    THIRD_GAME      = 3,
+    FOURTH_GAME     = 4
   };
 
   FourMatchesContest(QObject *parent = 0);
@@ -32,6 +32,8 @@ public:
   QList<Match> getLoosers( MatchModel* model );
 
   void addMatchToCurrentPhase(const Team &initialTeam, const Team &teamAvailable);
+  int currentPhase() const;
+
 public slots:
   void nextState();
 
