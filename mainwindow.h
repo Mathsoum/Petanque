@@ -40,8 +40,12 @@ private:
   QString mNewTeamName;
   FourMatchesContest* mFourMatchesContest;
 
+  QMenu* mActionMenu;
+  QMenu* mTeamMenu;
+
   QAction* mGenerateMatchesAction;
   QAction* mAddNewTeamAction;
+  QAction* mDeleteTeamAction;
   QAction* mEditTeamAction;
   QAction* mNextContestStateAction;
   QAction* mSetUpWinnerAction;

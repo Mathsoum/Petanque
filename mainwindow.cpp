@@ -28,12 +28,13 @@ MainWindow::MainWindow(QWidget *parent) :
   setCentralWidget(mRegistrationWidget);
   resize(mRegistrationWidget->size());
 
-  QMenu* actionMenu = menuBar()->addMenu( "Action" );
-  mGenerateMatchesAction = actionMenu->addAction( QString::fromUtf8( "Générer matchs" ) );
+  mActionMenu = menuBar()->addMenu( "Action" );
+  mGenerateMatchesAction = mActionMenu->addAction( QString::fromUtf8( "Générer matchs" ) );
 
-  QMenu* teamMenu = menuBar()->addMenu( "Team" );
-  mAddNewTeamAction = teamMenu->addAction( QString::fromUtf8( "Ajouter équipe" ) );
-  mEditTeamAction = teamMenu->addAction( QString::fromUtf8( "Editer équipe" ) );
+  mTeamMenu = menuBar()->addMenu( "Équipe" );
+  mAddNewTeamAction = mTeamMenu->addAction( QString::fromUtf8( "Ajouter équipe" ) );
+  mDeleteTeamAction = mTeamMenu->addAction( QString::fromUtf8( "Supprimer équipe" ) );
+  mEditTeamAction = mTeamMenu->addAction( QString::fromUtf8( "Éditer équipe" ) );
 
   mGenerateMatchesAction->setStatusTip( QString::fromUtf8( "Génère des matchs à partir de la liste des équipes." ) );
   connect( mGenerateMatchesAction, SIGNAL(triggered()), this, SLOT(generateMatchesSlot()) );
@@ -41,7 +42,10 @@ MainWindow::MainWindow(QWidget *parent) :
   mAddNewTeamAction->setStatusTip( QString::fromUtf8( "Ajoute une équipe à la liste des équipes." ) );
   connect( mAddNewTeamAction, SIGNAL(triggered()), mRegistrationWidget, SLOT(addNewTeamSlot()) );
 
-  mEditTeamAction->setStatusTip( QString::fromUtf8( "Modifier les données d'une équipe." ) );
+  mDeleteTeamAction->setStatusTip( QString::fromUtf8( "Supprimer l'équipe sélectionnée." ) );
+  connect( mDeleteTeamAction, SIGNAL(triggered()), mRegistrationWidget, SLOT(deleteTeamSlot()) );
+
+  mEditTeamAction->setStatusTip( QString::fromUtf8( "Modifier les données de l'équipe sélectionnée." ) );
   connect( mEditTeamAction, SIGNAL(triggered()), mRegistrationWidget, SLOT(editTeamSlot()) );
 
   TeamModel* model = TeamModel::getInstance();
@@ -62,8 +66,7 @@ MainWindow::~MainWindow()
 void MainWindow::generateMatchesSlot()
 {
   mGenerateMatchesAction->setEnabled( false );
-  mAddNewTeamAction->setEnabled( false );
-  mEditTeamAction->setEnabled( false );
+  menuBar()->removeAction(mTeamMenu->menuAction());
 
   mFourMatchesContest = new FourMatchesContest();
   mFourMatchesContest->initContest();
