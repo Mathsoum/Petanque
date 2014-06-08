@@ -23,7 +23,6 @@ public:
 
 private slots:
   void generateMatchesSlot();
-  void addNewTeamSlot();
   void editTeamSlot();
   void activeEditTeamSlot( const QModelIndex &index );
   void nextPhaseSlot();

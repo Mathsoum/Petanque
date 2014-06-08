@@ -24,6 +24,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi( this );
 
+  mRegistrationWidget = new RegistrationWidget(this, this);
+  setCentralWidget(mRegistrationWidget);
+  resize(mRegistrationWidget->size());
+
   QMenu* menu = menuBar()->addMenu( "Action" );
   mGenerateMatchesAction = menu->addAction( QString::fromUtf8( "Générer matchs" ) );
   mAddNewTeamAction = menu->addAction( QString::fromUtf8( "Ajouter équipe" ) );
@@ -33,14 +37,10 @@ MainWindow::MainWindow(QWidget *parent) :
   connect( mGenerateMatchesAction, SIGNAL(triggered()), this, SLOT(generateMatchesSlot()) );
 
   mAddNewTeamAction->setStatusTip( QString::fromUtf8( "Ajoute une équipe à la liste des équipes." ) );
-  connect( mAddNewTeamAction, SIGNAL(triggered()), this, SLOT(addNewTeamSlot()) );
+  connect( mAddNewTeamAction, SIGNAL(triggered()), mRegistrationWidget, SLOT(addNewTeamSlot()) );
 
   mEditTeamAction->setStatusTip( QString::fromUtf8( "Modifier les données d'une équipe." ) );
   connect( mEditTeamAction, SIGNAL(triggered()), this, SLOT(editTeamSlot()) );
-
-  mRegistrationWidget = new RegistrationWidget(this, this);
-  setCentralWidget(mRegistrationWidget);
-  resize(mRegistrationWidget->size());
 
   TeamModel* model = TeamModel::getInstance();
   mRegistrationWidget->getTeamView()->setModel( model );
@@ -86,14 +86,6 @@ void MainWindow::generateMatchesSlot()
            SIGNAL( currentRowChanged( QModelIndex, QModelIndex ) ),
            this,
            SLOT( activeSetUpWinnerActionSlot( QModelIndex ) ) );
-}
-
-void MainWindow::addNewTeamSlot()
-{
-  DialogTeam team;
-  if( team.exec() == QDialog::Accepted ) {
-    TeamModel::getInstance()->addTeam( Team( team.getName() ) );
-  }
 }
 
 void MainWindow::editTeamSlot()
