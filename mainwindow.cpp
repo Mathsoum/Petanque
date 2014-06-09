@@ -46,16 +46,17 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi( this );
 
+  TeamModel* model = TeamModel::getInstance();
+  createTestModel( model, false );
+
   mRegistrationWidget = new RegistrationWidget(this);
+  mRegistrationWidget->setModel( model );
   setCentralWidget(mRegistrationWidget);
   resize(mRegistrationWidget->size());
 
   setUpMenuAndConnect();
 
-  TeamModel* model = TeamModel::getInstance();
-  mRegistrationWidget->getTeamView()->setModel( model );
 
-  createTestModel( model, false );
 }
 
 MainWindow::~MainWindow()

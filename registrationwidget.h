@@ -33,7 +33,7 @@ private:
     Ui::RegistrationWidget *ui;
 
 private:
-    void configGui();
+    void configTableView();
 };
 
 #endif // REGISTRATIONWIDGET_H

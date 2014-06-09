@@ -4,7 +4,7 @@
 #include "teammodel.h"
 #include "dialogteam.h"
 
-void RegistrationWidget::configGui()
+void RegistrationWidget::configTableView()
 {
     ui->teamView->setSelectionBehavior( QAbstractItemView::SelectRows );
     ui->teamView->setSelectionMode( QAbstractItemView::SingleSelection );
@@ -18,8 +18,6 @@ RegistrationWidget::RegistrationWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    configGui();
-
     connect(ui->addTeamButton, SIGNAL(clicked()), this, SLOT(addNewTeamSlot()));
     connect(ui->deleteTeamButton, SIGNAL(clicked()), this, SLOT(deleteTeamSlot()));
     connect(ui->editTeamButton, SIGNAL(clicked()), this, SLOT(editTeamSlot()));
@@ -28,6 +26,8 @@ RegistrationWidget::RegistrationWidget(QWidget *parent) :
 void RegistrationWidget::setModel(QAbstractItemModel* model)
 {
     ui->teamView->setModel(model);
+
+    configTableView();
 }
 
 RegistrationWidget::~RegistrationWidget()
