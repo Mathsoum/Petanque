@@ -4,15 +4,30 @@
 #include "teammodel.h"
 #include "dialogteam.h"
 
+void RegistrationWidget::configGui()
+{
+    ui->teamView->setSelectionBehavior( QAbstractItemView::SelectRows );
+    ui->teamView->setSelectionMode( QAbstractItemView::SingleSelection );
+    ui->teamView->setColumnWidth( 0, 150 );
+    ui->teamView->setColumnWidth( 1, 150 );
+}
+
 RegistrationWidget::RegistrationWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RegistrationWidget)
 {
     ui->setupUi(this);
 
+    configGui();
+
     connect(ui->addTeamButton, SIGNAL(clicked()), this, SLOT(addNewTeamSlot()));
     connect(ui->deleteTeamButton, SIGNAL(clicked()), this, SLOT(deleteTeamSlot()));
     connect(ui->editTeamButton, SIGNAL(clicked()), this, SLOT(editTeamSlot()));
+}
+
+void RegistrationWidget::setModel(QAbstractItemModel* model)
+{
+    ui->teamView->setModel(model);
 }
 
 RegistrationWidget::~RegistrationWidget()

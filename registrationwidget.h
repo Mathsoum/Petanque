@@ -5,6 +5,7 @@
 
 #include <QWidget>
 
+class QAbstractItemModel;
 class QTableView;
 
 namespace Ui {
@@ -21,6 +22,8 @@ public:
 
     QTableView *getTeamView();
 
+    void setModel(QAbstractItemModel *model);
+
 public slots:
     void addNewTeamSlot();
     void deleteTeamSlot();
@@ -28,6 +31,9 @@ public slots:
 
 private:
     Ui::RegistrationWidget *ui;
+
+private:
+    void configGui();
 };
 
 #endif // REGISTRATIONWIDGET_H

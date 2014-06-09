@@ -17,6 +17,29 @@
 #include <QVBoxLayout>
 #include <QTableView>
 
+void MainWindow::setUpMenuAndConnect()
+{
+    mActionMenu = menuBar()->addMenu( "Action" );
+    mGenerateMatchesAction = mActionMenu->addAction( QString::fromUtf8( "Générer matchs" ) );
+
+    mTeamMenu = menuBar()->addMenu( "Équipe" );
+    mAddNewTeamAction = mTeamMenu->addAction( QString::fromUtf8( "Ajouter équipe" ) );
+    mDeleteTeamAction = mTeamMenu->addAction( QString::fromUtf8( "Supprimer équipe" ) );
+    mEditTeamAction = mTeamMenu->addAction( QString::fromUtf8( "Éditer équipe" ) );
+
+    mGenerateMatchesAction->setStatusTip( QString::fromUtf8( "Génère des matchs à partir de la liste des équipes." ) );
+    connect( mGenerateMatchesAction, SIGNAL(triggered()), this, SLOT(generateMatchesSlot()) );
+
+    mAddNewTeamAction->setStatusTip( QString::fromUtf8( "Ajoute une équipe à la liste des équipes." ) );
+    connect( mAddNewTeamAction, SIGNAL(triggered()), mRegistrationWidget, SLOT(addNewTeamSlot()) );
+
+    mDeleteTeamAction->setStatusTip( QString::fromUtf8( "Supprimer l'équipe sélectionnée." ) );
+    connect( mDeleteTeamAction, SIGNAL(triggered()), mRegistrationWidget, SLOT(deleteTeamSlot()) );
+
+    mEditTeamAction->setStatusTip( QString::fromUtf8( "Modifier les données de l'équipe sélectionnée." ) );
+    connect( mEditTeamAction, SIGNAL(triggered()), mRegistrationWidget, SLOT(editTeamSlot()) );
+}
+
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow)
@@ -27,32 +50,10 @@ MainWindow::MainWindow(QWidget *parent) :
   setCentralWidget(mRegistrationWidget);
   resize(mRegistrationWidget->size());
 
-  mActionMenu = menuBar()->addMenu( "Action" );
-  mGenerateMatchesAction = mActionMenu->addAction( QString::fromUtf8( "Générer matchs" ) );
-
-  mTeamMenu = menuBar()->addMenu( "Équipe" );
-  mAddNewTeamAction = mTeamMenu->addAction( QString::fromUtf8( "Ajouter équipe" ) );
-  mDeleteTeamAction = mTeamMenu->addAction( QString::fromUtf8( "Supprimer équipe" ) );
-  mEditTeamAction = mTeamMenu->addAction( QString::fromUtf8( "Éditer équipe" ) );
-
-  mGenerateMatchesAction->setStatusTip( QString::fromUtf8( "Génère des matchs à partir de la liste des équipes." ) );
-  connect( mGenerateMatchesAction, SIGNAL(triggered()), this, SLOT(generateMatchesSlot()) );
-
-  mAddNewTeamAction->setStatusTip( QString::fromUtf8( "Ajoute une équipe à la liste des équipes." ) );
-  connect( mAddNewTeamAction, SIGNAL(triggered()), mRegistrationWidget, SLOT(addNewTeamSlot()) );
-
-  mDeleteTeamAction->setStatusTip( QString::fromUtf8( "Supprimer l'équipe sélectionnée." ) );
-  connect( mDeleteTeamAction, SIGNAL(triggered()), mRegistrationWidget, SLOT(deleteTeamSlot()) );
-
-  mEditTeamAction->setStatusTip( QString::fromUtf8( "Modifier les données de l'équipe sélectionnée." ) );
-  connect( mEditTeamAction, SIGNAL(triggered()), mRegistrationWidget, SLOT(editTeamSlot()) );
+  setUpMenuAndConnect();
 
   TeamModel* model = TeamModel::getInstance();
   mRegistrationWidget->getTeamView()->setModel( model );
-  mRegistrationWidget->getTeamView()->setSelectionBehavior( QAbstractItemView::SelectRows );
-  mRegistrationWidget->getTeamView()->setSelectionMode( QAbstractItemView::SingleSelection );
-  mRegistrationWidget->getTeamView()->setColumnWidth( 0, 150 );
-  mRegistrationWidget->getTeamView()->setColumnWidth( 1, 150 );
 
   createTestModel( model, false );
 }
@@ -77,7 +78,6 @@ void MainWindow::generateMatchesSlot()
   QMenu* contestMenu = menuBar()->addMenu( "Concours" );
   mNextContestStateAction = contestMenu->addAction( "Phase suivante" );
   mNextContestStateAction->setEnabled( false );
-
 
   mSetUpWinnerAction = contestMenu->addAction( "Saisir gagnant..." );
   mSetUpWinnerAction->setEnabled(false);

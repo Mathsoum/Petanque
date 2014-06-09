@@ -21,6 +21,7 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
+    void setUpMenuAndConnect();
 private slots:
   void generateMatchesSlot();
   void activeEditTeamSlot( const QModelIndex &index );
