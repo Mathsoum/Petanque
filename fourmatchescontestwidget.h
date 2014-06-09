@@ -20,7 +20,7 @@ public:
     QList<QTableView*> getTableViewList() const;
 
 public slots:
-    void teamRadioSelctionChanged();
+    void teamRadioSelectionChanged();
     void teamViewSelectionChanged();
 
 private:

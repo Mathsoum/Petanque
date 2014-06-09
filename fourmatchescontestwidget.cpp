@@ -29,8 +29,8 @@ FourMatchesContestWidget::FourMatchesContestWidget(QWidget *parent) :
 
   ui->submitScoreButton->setEnabled(false);
 
-  connect(ui->firstTeamRadioButton, SIGNAL(clicked()), SLOT(teamRadioSelctionChanged()));
-  connect(ui->secondTeamRadioButton, SIGNAL(clicked()), SLOT(teamRadioSelctionChanged()));
+  connect(ui->firstTeamRadioButton, SIGNAL(clicked()), SLOT(teamRadioSelectionChanged()));
+  connect(ui->secondTeamRadioButton, SIGNAL(clicked()), SLOT(teamRadioSelectionChanged()));
 }
 
 FourMatchesContestWidget::~FourMatchesContestWidget()
@@ -45,7 +45,7 @@ QList<QTableView*> FourMatchesContestWidget::getTableViewList() const
   return list;
 }
 
-void FourMatchesContestWidget::teamRadioSelctionChanged()
+void FourMatchesContestWidget::teamRadioSelectionChanged()
 {
     ui->submitScoreButton->setEnabled(
         ui->firstTeamRadioButton->isChecked() || ui->secondTeamRadioButton->isChecked()
