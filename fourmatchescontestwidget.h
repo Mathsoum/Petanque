@@ -21,7 +21,7 @@ public:
     QList<QTableView*> getTableViewList() const;
 
 public slots:
-    void teamRadioSelectionChanged();
+    void setSubmitScoreButtonStateSlot();
     void teamViewSelectionChanged();
     void setUpWinnerSlot();
 

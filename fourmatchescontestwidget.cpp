@@ -5,6 +5,8 @@
 #include "matchmodel.h"
 #include "setupwinnerdialog.h"
 
+#include <QDebug>
+
 FourMatchesContestWidget::FourMatchesContestWidget(QWidget *parent) :
   QWidget(parent),
   ui(new Ui::FourMatchesContestWidget)
@@ -17,6 +19,9 @@ FourMatchesContestWidget::FourMatchesContestWidget(QWidget *parent) :
   mFourMatchesContest->initContest();
 
   ui->firstMatchTableView->setModel( mFourMatchesContest->getCurrentMatchModel() );
+
+  connect(ui->firstMatchTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+          SLOT(teamViewSelectionChanged()));
 }
 
 void FourMatchesContestWidget::configGui()
@@ -43,8 +48,8 @@ void FourMatchesContestWidget::configGui()
 
     ui->submitScoreButton->setEnabled(false);
 
-    connect(ui->firstTeamRadioButton, SIGNAL(clicked()), SLOT(teamRadioSelectionChanged()));
-    connect(ui->secondTeamRadioButton, SIGNAL(clicked()), SLOT(teamRadioSelectionChanged()));
+    connect(ui->firstTeamRadioButton, SIGNAL(toggled(bool)), SLOT(setSubmitScoreButtonStateSlot()));
+    connect(ui->secondTeamRadioButton, SIGNAL(toggled(bool)), SLOT(setSubmitScoreButtonStateSlot()));
 }
 
 FourMatchesContestWidget::~FourMatchesContestWidget()
@@ -59,7 +64,7 @@ QList<QTableView*> FourMatchesContestWidget::getTableViewList() const
   return list;
 }
 
-void FourMatchesContestWidget::teamRadioSelectionChanged()
+void FourMatchesContestWidget::setSubmitScoreButtonStateSlot()
 {
     ui->submitScoreButton->setEnabled(
         ui->firstTeamRadioButton->isChecked() || ui->secondTeamRadioButton->isChecked()
@@ -68,8 +73,15 @@ void FourMatchesContestWidget::teamRadioSelectionChanged()
 
 void FourMatchesContestWidget::teamViewSelectionChanged()
 {
+    qDebug() << "Row changed !!";
+    ui->firstTeamRadioButton->setAutoExclusive(false);
     ui->firstTeamRadioButton->setChecked(false);
+    ui->firstTeamRadioButton->setAutoExclusive(true);
+    qDebug() << ui->firstTeamRadioButton->isChecked();
+    ui->secondTeamRadioButton->setAutoExclusive(false);
     ui->secondTeamRadioButton->setChecked(false);
+    ui->secondTeamRadioButton->setAutoExclusive(true);
+    qDebug() << ui->secondTeamRadioButton->isChecked();
 }
 
 void FourMatchesContestWidget::setUpWinnerSlot()
