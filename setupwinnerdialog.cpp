@@ -19,10 +19,10 @@ SetUpWinnerDialog::~SetUpWinnerDialog()
 
 void SetUpWinnerDialog::setMatch( Match *match )
 {
-  ui->firstTeamRadio->setText( match->teams().first.getName() );
-  ui->secondTeamRadio->setText( match->teams().second.getName() );
+  ui->firstTeamRadio->setText( match->players().first.getName() );
+  ui->secondTeamRadio->setText( match->players().second.getName() );
   if( match->isFinished() ) {
-    if( match->getWinner() == match->teams().first ) {
+    if( match->getWinner() == match->players().first ) {
       ui->firstTeamRadio->setChecked( true );
     } else {
       ui->secondTeamRadio->setChecked( true );

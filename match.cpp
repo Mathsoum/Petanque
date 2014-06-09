@@ -6,8 +6,8 @@ Match::Match(const Team &first, const Team &second)
 {
   mState = PENDING;
 
-  mMatch.first = first;
-  mMatch.second = second;
+  players.first = first;
+  players.second = second;
   mWinner = NONE;
 
   if( second == Team() ) {
@@ -16,9 +16,9 @@ Match::Match(const Team &first, const Team &second)
   }
 }
 
-QPair<Team, Team> Match::teams() const
+QPair<Team, Team> Match::players() const
 {
-  return mMatch;
+  return players;
 }
 
 void Match::changeToPlaying()
@@ -34,11 +34,11 @@ void Match::changeToFinished( bool firstWin )
 
 Team Match::getWinner() const
 {
-  return mWinner == NONE ? Team() : mWinner == FIRST ? mMatch.first : mMatch.second;
+  return mWinner == NONE ? Team() : mWinner == FIRST ? players.first : players.second;
 }
 
 bool operator==( const Match &one, const Match &other ) {
-    return (one.teams().first == other.teams().first || one.teams().first == other.teams().second)
-            && (one.teams().second == other.teams().first || one.teams().second == other.teams().second) ;
+    return (one.players().first == other.players().first || one.players().first == other.players().second)
+            && (one.players().second == other.players().first || one.players().second == other.players().second) ;
 }
 

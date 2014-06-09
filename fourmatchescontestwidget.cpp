@@ -94,12 +94,17 @@ void FourMatchesContestWidget::teamViewSelectionChanged(const QModelIndex& selec
     }
 }
 
+Match* FourMatchesContestWidget::getCurrentSelectedMatch(QTableView* tableView)
+{
+    return mFourMatchesContest->getCurrentMatchModel()->getRawData().at(
+      tableView->selectionModel()->currentIndex().row()
+    );
+}
+
 void FourMatchesContestWidget::setUpWinnerSlot()
 {
     SetUpWinnerDialog dialog;
-    Match* selectedMatch = mFourMatchesContest->getCurrentMatchModel()->getRawData().at(
-      ui->firstMatchTableView->selectionModel()->currentIndex().row()
-    );
+    Match* selectedMatch = getCurrentSelectedMatch(ui->firstMatchTableView);
     dialog.setMatch( selectedMatch );
 
     if( dialog.exec() == QDialog::Accepted ) {
@@ -109,9 +114,6 @@ void FourMatchesContestWidget::setUpWinnerSlot()
 
 void FourMatchesContestWidget::setUpWinnerFromSubmitButtonSlot()
 {
-    Match* selectedMatch = mFourMatchesContest->getCurrentMatchModel()->getRawData().at(
-      ui->firstMatchTableView->selectionModel()->currentIndex().row()
-    );
+    Match* selectedMatch = getCurrentSelectedMatch(ui->firstMatchTableView);
     mFourMatchesContest->getCurrentMatchModel()->setFinished( selectedMatch, ui->firstTeamRadioButton->isChecked() );
-
 }

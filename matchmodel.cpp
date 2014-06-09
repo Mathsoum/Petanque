@@ -32,8 +32,8 @@ QVariant MatchModel::data(const QModelIndex &index, int role) const
 switch( role ) {
   case Qt::DisplayRole:
     return QVariant( index.column() == 0 ?
-                       mMatchList.at( index.row() )->teams().first.getName()
-                     : mMatchList.at( index.row() )->teams().second.getName() );
+                       mMatchList.at( index.row() )->players().first.getName()
+                     : mMatchList.at( index.row() )->players().second.getName() );
     break;
   case Qt::BackgroundRole:
     if( data( index, Qt::DisplayRole ).toString().isEmpty() ) {

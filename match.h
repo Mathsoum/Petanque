@@ -22,7 +22,7 @@ public:
 
   Match( const Team& first = Team(), const Team& second = Team() );
 
-  QPair<Team,Team> teams() const;
+  QPair<Team,Team> players() const;
 
   void changeToPlaying();
   void changeToFinished( bool firstWin );
@@ -31,7 +31,7 @@ public:
   inline bool isFinished() const { return mState == FINISHED; }
 
 private:
-  QPair<Team,Team> mMatch;
+  QPair<Team,Team> players;
   State mState;
   Winner mWinner;
 };

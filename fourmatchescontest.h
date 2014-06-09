@@ -2,10 +2,13 @@
 #define CONTEST_H
 
 #include <QObject>
+#include <QHash>
+#include <QList>
 
 #include "match.h"
 
 class MatchModel;
+class Phase;
 
 class FourMatchesContest : public QObject
 {
@@ -20,6 +23,14 @@ public:
     FOURTH_GAME     = 4
   };
 
+  enum WinCount {
+      NONE  = 0,
+      ONE   = 1,
+      TWO   = 2,
+      THREE = 3,
+      FOUR  = 4
+  };
+
   FourMatchesContest(QObject *parent = 0);
   ~FourMatchesContest();
 
@@ -28,11 +39,10 @@ public:
 
   void initContest( void );
 
-  QList<Match> getWinners( MatchModel* model );
-  QList<Match> getLoosers( MatchModel* model );
-
   void addMatchToCurrentPhase(const Team &initialTeam, const Team &teamAvailable);
   int currentPhase() const;
+
+  void setParticipants(QList<Team*> teamList);
 
 public slots:
   void nextState();
@@ -43,7 +53,16 @@ private:
   QList<Team> getTeamsAlreadyBeenExempt() const;
 
 private:
+  QList<Phase*> phaseList;
+  QList<Team*> participants;
+
+
+
+
+
   State mState;
+
+  QHash<WinCount, QList<Team> > teamAgainstWinCountMap;
 
   MatchModel* mFirstPhase;
   MatchModel* mSecondPhase;

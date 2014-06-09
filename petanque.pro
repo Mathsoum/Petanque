@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     setupwinnerdialog.cpp \
     registrationwidget.cpp \
     fourmatchescontestwidget.cpp \
-    fourmatchescontest.cpp
+    fourmatchescontest.cpp \
+    phase.cpp
 
 HEADERS  += mainwindow.h \
     teammodel.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
     setupwinnerdialog.h \
     registrationwidget.h \
     fourmatchescontestwidget.h \
-    fourmatchescontest.h
+    fourmatchescontest.h \
+    phase.h
 
 FORMS    += mainwindow.ui \
     dialogteam.ui \

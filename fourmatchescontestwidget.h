@@ -5,6 +5,7 @@
 
 class QTableView;
 class FourMatchesContest;
+class Match;
 
 namespace Ui {
 class FourMatchesContestWidget;
@@ -19,7 +20,6 @@ public:
     ~FourMatchesContestWidget();
 
     QList<QTableView*> getTableViewList() const;
-
 public slots:
     void setSubmitScoreButtonStateSlot();
     void teamViewSelectionChanged(const QModelIndex &selectedIndex);
@@ -29,6 +29,7 @@ public slots:
 private:
     void configGui();
     void prepareTableView(QTableView *tableViewToPrepare);
+    Match *getCurrentSelectedMatch(QTableView *tableView);
 
 private:
     Ui::FourMatchesContestWidget *ui;
