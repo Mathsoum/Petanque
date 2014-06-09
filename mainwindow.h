@@ -24,8 +24,6 @@ public:
 private slots:
   void generateMatchesSlot();
   void activeEditTeamSlot( const QModelIndex &index );
-  void nextPhaseSlot();
-  void activeNextPhaseActionSlot();
   void setUpWinnerSlot();
   void activeSetUpWinnerActionSlot( const QModelIndex &index );
 

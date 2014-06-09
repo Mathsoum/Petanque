@@ -77,9 +77,6 @@ void MainWindow::generateMatchesSlot()
   QMenu* contestMenu = menuBar()->addMenu( "Concours" );
   mNextContestStateAction = contestMenu->addAction( "Phase suivante" );
   mNextContestStateAction->setEnabled( false );
-  connect( mNextContestStateAction, SIGNAL( triggered() ), this, SLOT( nextPhaseSlot() ) );
-  connect( mFourMatchesContest->getCurrentMatchModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
-           this, SLOT( activeNextPhaseActionSlot() ) );
 
 
   mSetUpWinnerAction = contestMenu->addAction( "Saisir gagnant..." );
@@ -94,22 +91,6 @@ void MainWindow::generateMatchesSlot()
 void MainWindow::activeEditTeamSlot( const QModelIndex& index  )
 {
   mEditTeamAction->setEnabled( index.isValid() );
-}
-
-void MainWindow::nextPhaseSlot()
-{
-  mFourMatchesContest->nextState();
-  QTableView* view = mFourMatchesContestWidget->getTableViewList().at( mFourMatchesContest->currentPhase() );
-  view->setModel(mFourMatchesContest->getCurrentMatchModel());
-
-  connect( mFourMatchesContest->getCurrentMatchModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
-           this, SLOT( activeNextPhaseActionSlot() ) );
-}
-
-void MainWindow::activeNextPhaseActionSlot()
-{
-  bool finished = mFourMatchesContest->getCurrentMatchModel()->notFinishedYet() == 0;
-  mNextContestStateAction->setEnabled( finished );
 }
 
 void MainWindow::setUpWinnerSlot()
