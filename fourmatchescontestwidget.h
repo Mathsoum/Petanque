@@ -28,6 +28,7 @@ public slots:
 
 private:
     void configGui();
+    void prepareTableView(QTableView *tableViewToPrepare);
 
 private:
     Ui::FourMatchesContestWidget *ui;
