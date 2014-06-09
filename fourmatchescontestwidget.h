@@ -4,6 +4,7 @@
 #include <QWidget>
 
 class QTableView;
+class FourMatchesContest;
 
 namespace Ui {
 class FourMatchesContestWidget;
@@ -22,9 +23,15 @@ public:
 public slots:
     void teamRadioSelectionChanged();
     void teamViewSelectionChanged();
+    void setUpWinnerSlot();
+
+private:
+    void configGui();
 
 private:
     Ui::FourMatchesContestWidget *ui;
+
+    FourMatchesContest* mFourMatchesContest;
 };
 
 #endif // FOURMATCHESCONTESTWIDGET_H

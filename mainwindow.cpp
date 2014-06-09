@@ -4,7 +4,6 @@
 #include "teammodel.h"
 #include "matchmodel.h"
 #include "dialogteam.h"
-#include "setupwinnerdialog.h"
 #include "fourmatchescontest.h"
 #include "registrationwidget.h"
 #include "fourmatchescontestwidget.h"
@@ -72,8 +71,6 @@ void MainWindow::generateMatchesSlot()
   mFourMatchesContest->initContest();
 
   mFourMatchesContestWidget = new FourMatchesContestWidget(this);
-  QTableView* view = mFourMatchesContestWidget->getTableViewList().at(0);
-  view->setModel( mFourMatchesContest->getCurrentMatchModel() );
   setCentralWidget( mFourMatchesContestWidget );
   resize( mFourMatchesContestWidget->size() );
 
@@ -117,15 +114,7 @@ void MainWindow::activeNextPhaseActionSlot()
 
 void MainWindow::setUpWinnerSlot()
 {
-  SetUpWinnerDialog dialog;
-  Match* selectedMatch = mFourMatchesContest->getCurrentMatchModel()->getRawData().at(
-    mFourMatchesContestWidget->getTableViewList().at(0)->selectionModel()->currentIndex().row()
-  );
-  dialog.setMatch( selectedMatch );
-
-  if( dialog.exec() == QDialog::Accepted ) {
-    mFourMatchesContest->getCurrentMatchModel()->setFinished( selectedMatch, dialog.firstWins() );
-  }
+    mFourMatchesContestWidget->setUpWinnerSlot();
 }
 
 void MainWindow::activeSetUpWinnerActionSlot( const QModelIndex& index )
