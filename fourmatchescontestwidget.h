@@ -22,7 +22,7 @@ public:
 
 public slots:
     void setSubmitScoreButtonStateSlot();
-    void teamViewSelectionChanged();
+    void teamViewSelectionChanged(const QModelIndex &selectedIndex);
     void setUpWinnerSlot();
 
 private:

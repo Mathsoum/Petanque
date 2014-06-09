@@ -21,7 +21,7 @@ FourMatchesContestWidget::FourMatchesContestWidget(QWidget *parent) :
   ui->firstMatchTableView->setModel( mFourMatchesContest->getCurrentMatchModel() );
 
   connect(ui->firstMatchTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-          SLOT(teamViewSelectionChanged()));
+          SLOT(teamViewSelectionChanged(QModelIndex)));
 }
 
 void FourMatchesContestWidget::configGui()
@@ -71,17 +71,22 @@ void FourMatchesContestWidget::setSubmitScoreButtonStateSlot()
     );
 }
 
-void FourMatchesContestWidget::teamViewSelectionChanged()
+void FourMatchesContestWidget::teamViewSelectionChanged(const QModelIndex& selectedIndex)
 {
-    qDebug() << "Row changed !!";
+    QModelIndex firstTeamIndex = ui->firstMatchTableView->model()->index(selectedIndex.row(), 0);
+    QModelIndex secondTeamIndex = ui->firstMatchTableView->model()->index(selectedIndex.row(), 1);
+
+    QString firstTeamName = ui->firstMatchTableView->model()->data(firstTeamIndex).toString();
+    QString secondTeamName = ui->firstMatchTableView->model()->data(secondTeamIndex).toString();
+
+    ui->firstTeamRadioButton->setText( firstTeamName );
     ui->firstTeamRadioButton->setAutoExclusive(false);
     ui->firstTeamRadioButton->setChecked(false);
     ui->firstTeamRadioButton->setAutoExclusive(true);
-    qDebug() << ui->firstTeamRadioButton->isChecked();
+    ui->secondTeamRadioButton->setText( secondTeamName );
     ui->secondTeamRadioButton->setAutoExclusive(false);
     ui->secondTeamRadioButton->setChecked(false);
     ui->secondTeamRadioButton->setAutoExclusive(true);
-    qDebug() << ui->secondTeamRadioButton->isChecked();
 }
 
 void FourMatchesContestWidget::setUpWinnerSlot()
