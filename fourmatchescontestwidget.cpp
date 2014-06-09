@@ -81,13 +81,24 @@ void FourMatchesContestWidget::teamViewSelectionChanged(const QModelIndex& selec
     QString secondTeamName = ui->firstMatchTableView->model()->data(secondTeamIndex).toString();
 
     ui->firstTeamRadioButton->setText( firstTeamName );
-    ui->firstTeamRadioButton->setAutoExclusive(false);
-    ui->firstTeamRadioButton->setChecked(false);
-    ui->firstTeamRadioButton->setAutoExclusive(true);
     ui->secondTeamRadioButton->setText( secondTeamName );
-    ui->secondTeamRadioButton->setAutoExclusive(false);
-    ui->secondTeamRadioButton->setChecked(false);
-    ui->secondTeamRadioButton->setAutoExclusive(true);
+
+    Match* selectedMatch = mFourMatchesContest->getCurrentMatchModel()->getRawData().at(
+      ui->firstMatchTableView->selectionModel()->currentIndex().row()
+    );
+
+    if(selectedMatch->isFinished()) {
+        bool firstWins = selectedMatch->getWinner().getName() == firstTeamName;
+        ui->firstTeamRadioButton->setChecked(firstWins);
+        ui->secondTeamRadioButton->setChecked(!firstWins);
+    } else {
+        ui->firstTeamRadioButton->setAutoExclusive(false);
+        ui->firstTeamRadioButton->setChecked(false);
+        ui->firstTeamRadioButton->setAutoExclusive(true);
+        ui->secondTeamRadioButton->setAutoExclusive(false);
+        ui->secondTeamRadioButton->setChecked(false);
+        ui->secondTeamRadioButton->setAutoExclusive(true);
+    }
 }
 
 void FourMatchesContestWidget::setUpWinnerSlot()
