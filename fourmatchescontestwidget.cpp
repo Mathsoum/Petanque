@@ -50,6 +50,7 @@ void FourMatchesContestWidget::configGui()
 
     connect(ui->firstTeamRadioButton, SIGNAL(toggled(bool)), SLOT(setSubmitScoreButtonStateSlot()));
     connect(ui->secondTeamRadioButton, SIGNAL(toggled(bool)), SLOT(setSubmitScoreButtonStateSlot()));
+    connect(ui->submitScoreButton, SIGNAL(clicked()), SLOT(setUpWinnerFromSubmitButtonSlot()));
 }
 
 FourMatchesContestWidget::~FourMatchesContestWidget()
@@ -100,4 +101,13 @@ void FourMatchesContestWidget::setUpWinnerSlot()
     if( dialog.exec() == QDialog::Accepted ) {
       mFourMatchesContest->getCurrentMatchModel()->setFinished( selectedMatch, dialog.firstWins() );
     }
+}
+
+void FourMatchesContestWidget::setUpWinnerFromSubmitButtonSlot()
+{
+    Match* selectedMatch = mFourMatchesContest->getCurrentMatchModel()->getRawData().at(
+      ui->firstMatchTableView->selectionModel()->currentIndex().row()
+    );
+    mFourMatchesContest->getCurrentMatchModel()->setFinished( selectedMatch, ui->firstTeamRadioButton->isChecked() );
+
 }

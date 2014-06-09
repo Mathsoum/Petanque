@@ -24,6 +24,7 @@ public slots:
     void setSubmitScoreButtonStateSlot();
     void teamViewSelectionChanged(const QModelIndex &selectedIndex);
     void setUpWinnerSlot();
+    void setUpWinnerFromSubmitButtonSlot();
 
 private:
     void configGui();
