@@ -55,8 +55,6 @@ MainWindow::MainWindow(QWidget *parent) :
   resize(mRegistrationWidget->size());
 
   setUpMenuAndConnect();
-
-
 }
 
 MainWindow::~MainWindow()
@@ -127,7 +125,7 @@ void MainWindow::createTestModel( TeamModel* model, bool even )
   model->addTeam( Team( "L" ) );
   model->addTeam( Team( "O" ) );
   if( !even ) {
-    model->addTeam( Team("V") );
+    model->addTeam( Team( "V" ) );
   }
 }
 

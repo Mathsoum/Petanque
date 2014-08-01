@@ -22,6 +22,7 @@ FourMatchesContestWidget::FourMatchesContestWidget(QWidget *parent) :
 
   connect(ui->firstMatchTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
           SLOT(teamViewSelectionChanged(QModelIndex)));
+  connect(this, SIGNAL(currentPhaseOver()), mFourMatchesContest, SLOT(nextState()));
 }
 
 void FourMatchesContestWidget::prepareTableView(QTableView* tableViewToPrepare)
@@ -104,6 +105,10 @@ void FourMatchesContestWidget::setUpWinnerSlot()
 
     if( dialog.exec() == QDialog::Accepted ) {
       mFourMatchesContest->getCurrentMatchModel()->setFinished( selectedMatch, dialog.firstWins() );
+      if( mFourMatchesContest->isCurrentPhaseOver() ) {
+          emit currentPhaseOver();
+          ui->secondMatchTableView->setModel( mFourMatchesContest->getCurrentMatchModel() );
+      }
     }
 }
 
@@ -113,5 +118,9 @@ void FourMatchesContestWidget::setUpWinnerFromSubmitButtonSlot()
       ui->firstMatchTableView->selectionModel()->currentIndex().row()
     );
     mFourMatchesContest->getCurrentMatchModel()->setFinished( selectedMatch, ui->firstTeamRadioButton->isChecked() );
+    if( mFourMatchesContest->isCurrentPhaseOver() ) {
+        emit currentPhaseOver();
+        ui->secondMatchTableView->setModel( mFourMatchesContest->getCurrentMatchModel() );
+    }
 
 }

@@ -26,6 +26,9 @@ public slots:
     void setUpWinnerSlot();
     void setUpWinnerFromSubmitButtonSlot();
 
+signals:
+    void currentPhaseOver();
+
 private:
     void configGui();
     void prepareTableView(QTableView *tableViewToPrepare);

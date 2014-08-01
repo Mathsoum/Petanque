@@ -28,11 +28,10 @@ public:
 
   void initContest( void );
 
-  QList<Match> getWinners( MatchModel* model );
-  QList<Match> getLoosers( MatchModel* model );
-
   void addMatchToCurrentPhase(const Team &initialTeam, const Team &teamAvailable);
   int currentPhase() const;
+
+  bool isCurrentPhaseOver() const;
 
 public slots:
   void nextState();
