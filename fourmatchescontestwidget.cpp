@@ -36,9 +36,9 @@ void FourMatchesContestWidget::prepareTableView(QTableView* tableViewToPrepare)
 void FourMatchesContestWidget::configGui()
 {
     prepareTableView(ui->firstMatchTableView);
-    prepareTableView(ui->secondMatchTableView);
-    prepareTableView(ui->thirdMatchTableView);
-    prepareTableView(ui->fourthMatchTableView);
+    prepareTableView(ui->secondMatchTableViewNoWin);
+    prepareTableView(ui->thirdMatchTableViewNoWin);
+    prepareTableView(ui->fourthMatchTableViewNoWin);
 
     ui->submitScoreButton->setEnabled(false);
 
@@ -55,7 +55,7 @@ FourMatchesContestWidget::~FourMatchesContestWidget()
 QList<QTableView*> FourMatchesContestWidget::getTableViewList() const
 {
   QList<QTableView*> list;
-  list << ui->firstMatchTableView << ui->secondMatchTableView << ui->thirdMatchTableView << ui->fourthMatchTableView;
+  list << ui->firstMatchTableView << ui->secondMatchTableViewNoWin << ui->thirdMatchTableViewNoWin << ui->fourthMatchTableViewNoWin;
   return list;
 }
 
@@ -107,7 +107,7 @@ void FourMatchesContestWidget::setUpWinnerSlot()
       mFourMatchesContest->getCurrentMatchModel()->setFinished( selectedMatch, dialog.firstWins() );
       if( mFourMatchesContest->isCurrentPhaseOver() ) {
           emit currentPhaseOver();
-          ui->secondMatchTableView->setModel( mFourMatchesContest->getCurrentMatchModel() );
+          ui->secondMatchTableViewNoWin->setModel( mFourMatchesContest->getCurrentMatchModel() );
       }
     }
 }
@@ -120,7 +120,7 @@ void FourMatchesContestWidget::setUpWinnerFromSubmitButtonSlot()
     mFourMatchesContest->getCurrentMatchModel()->setFinished( selectedMatch, ui->firstTeamRadioButton->isChecked() );
     if( mFourMatchesContest->isCurrentPhaseOver() ) {
         emit currentPhaseOver();
-        ui->secondMatchTableView->setModel( mFourMatchesContest->getCurrentMatchModel() );
+        ui->secondMatchTableViewNoWin->setModel( mFourMatchesContest->getCurrentMatchModel() );
     }
 
 }

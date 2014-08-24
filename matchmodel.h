@@ -2,6 +2,7 @@
 #define MATCHMODEL_H
 
 #include <QAbstractItemModel>
+#include <stdexcept>
 
 #include "match.h"
 
@@ -12,7 +13,7 @@ class MatchModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit MatchModel(QObject *parent = 0);
+    explicit MatchModel(int maxMatchCount = 0, QObject *parent = 0);
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
@@ -23,13 +24,14 @@ public:
     inline QList<Match*> getRawData() const { return mMatchList; }
 
     bool exists( const Match &match ) const;
-    void addMatch( Match *match );
+    bool isMatchListFull() const;
+    void addMatch( Match *match ) throw(std::logic_error);
     void setFinished(Match *match, bool firstWins );
     int notFinishedYet() const;
 
 private:
     QList<Match*> mMatchList;
-
+    int mMaxMatchCount;
 };
 
 #endif // MATCHMODEL_H

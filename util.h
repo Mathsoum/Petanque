@@ -19,6 +19,12 @@ public:
           list->replace( i, temp );
       }
   }
+
+  static T getRandom( const QList<T>& list ) {
+      srand(time(NULL));
+      int idx = rand() % list.size();
+      return list.at(idx);
+  }
 };
 
 

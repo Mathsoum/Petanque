@@ -28,6 +28,7 @@ public:
 
   void initContest( void );
 
+  void addMatchToFirstPhase(const Team &firstTeam, const Team &secondTeam);
   void addMatchToCurrentPhase(const Team &initialTeam, const Team &teamAvailable);
   int currentPhase() const;
 
@@ -38,6 +39,8 @@ public slots:
 
 private:
   void generateNextMatchList();
+  void generateFirstMatchList();
+
   QList<Team> teamsAvailableToPlayAgainst(const Team &team, const QList<Team> &teamsToPlayAgainst );
   QList<Team> getTeamsAlreadyBeenExempt() const;
 
@@ -45,9 +48,18 @@ private:
   State mState;
 
   MatchModel* mFirstPhase;
-  MatchModel* mSecondPhase;
-  MatchModel* mThirdPhase;
-  MatchModel* mFourthPhase;
+
+  MatchModel* mSecondPhaseOneWin;
+  MatchModel* mSecondPhaseNoWin;
+
+  MatchModel* mThirdPhaseTwoWin;
+  MatchModel* mThirdPhaseOneWin;
+  MatchModel* mThirdPhaseNoWin;
+
+  MatchModel* mFourthPhaseThreeWin;
+  MatchModel* mFourthPhaseTwoWin;
+  MatchModel* mFourthPhaseOneWin;
+  MatchModel* mFourthPhaseNoWin;
 };
 
 #endif // CONTEST_H
