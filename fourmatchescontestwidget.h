@@ -2,6 +2,7 @@
 #define FOURMATCHESCONTESTWIDGET_H
 
 #include <QWidget>
+#include <QTableView>
 
 class QTableView;
 class FourMatchesContest;
@@ -26,6 +27,21 @@ public slots:
     void setUpWinnerSlot();
     void setUpWinnerFromSubmitButtonSlot();
 
+private slots:
+    void firstViewSelected();
+
+    void secondViewOneWinSelected();
+    void secondViewNoWinSelected();
+
+    void thirdViewTwoWinSelected();
+    void thirdViewOneWinSelected();
+    void thirdViewNoWinSelected();
+
+    void fourthViewThreeWinSelected();
+    void fourthViewTwoWinSelected();
+    void fourthViewOneWinSelected();
+    void fourthViewNoWinSelected();
+
 signals:
     void currentPhaseOver();
 
@@ -37,6 +53,8 @@ private:
     Ui::FourMatchesContestWidget *ui;
 
     FourMatchesContest* mFourMatchesContest;
+
+    QTableView* mCurrentSecetedView;
 };
 
 #endif // FOURMATCHESCONTESTWIDGET_H

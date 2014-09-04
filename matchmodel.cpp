@@ -6,10 +6,11 @@
 #include <QDebug>
 #include <QFont>
 
-MatchModel::MatchModel(int maxMatchCount, QObject *parent) :
+MatchModel::MatchModel(int maxMatchCount, int winCount, QObject *parent) :
     QAbstractItemModel(parent)
 {
     mMaxMatchCount = maxMatchCount;
+    mWinCount = winCount;
 }
 
 int MatchModel::columnCount(const QModelIndex &parent) const
@@ -89,7 +90,7 @@ void MatchModel::addMatch( Match *match ) throw(std::logic_error)
         throw std::logic_error("Match list already full");
     }
 
-    beginInsertRows( QModelIndex(), mMatchList.size(), mMatchList.size());
+    beginInsertRows(QModelIndex(), mMatchList.size(), mMatchList.size());
     mMatchList.append( match );
     //qDebug() << "matchList.size() == " << mMatchList.size();
     endInsertRows();

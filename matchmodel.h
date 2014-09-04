@@ -13,7 +13,7 @@ class MatchModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit MatchModel(int maxMatchCount = 0, QObject *parent = 0);
+    explicit MatchModel(int maxMatchCount = 0, int winCount = 0, QObject *parent = 0);
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
@@ -32,6 +32,7 @@ public:
 private:
     QList<Match*> mMatchList;
     int mMaxMatchCount;
+    int mWinCount;
 };
 
 #endif // MATCHMODEL_H

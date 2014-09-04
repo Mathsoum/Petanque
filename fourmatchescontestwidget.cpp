@@ -13,15 +13,14 @@ FourMatchesContestWidget::FourMatchesContestWidget(QWidget *parent) :
 {
   ui->setupUi(this);
 
-  configGui();
 
   mFourMatchesContest = new FourMatchesContest();
   mFourMatchesContest->initContest();
 
   ui->firstMatchTableView->setModel( mFourMatchesContest->getCurrentMatchModel() );
 
-  connect(ui->firstMatchTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-          SLOT(teamViewSelectionChanged(QModelIndex)));
+  configGui();
+
   connect(this, SIGNAL(currentPhaseOver()), mFourMatchesContest, SLOT(nextState()));
 }
 
@@ -31,16 +30,33 @@ void FourMatchesContestWidget::prepareTableView(QTableView* tableViewToPrepare)
     tableViewToPrepare->horizontalHeader()->hide();
     tableViewToPrepare->setSelectionBehavior( QAbstractItemView::SelectRows );
     tableViewToPrepare->setSelectionMode( QAbstractItemView::SingleSelection );
+
+    connect(tableViewToPrepare->selectionModel(),
+            SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+            SLOT(teamViewSelectionChanged(QModelIndex)));
 }
 
 void FourMatchesContestWidget::configGui()
 {
     prepareTableView(ui->firstMatchTableView);
-    prepareTableView(ui->secondMatchTableViewNoWin);
-    prepareTableView(ui->thirdMatchTableViewNoWin);
-    prepareTableView(ui->fourthMatchTableViewNoWin);
+
+//    prepareTableView(ui->secondMatchTableViewNoWin);
+//    prepareTableView(ui->secondMatchTableViewOneWin);
+
+//    prepareTableView(ui->thirdMatchTableViewNoWin);
+//    prepareTableView(ui->thirdMatchTableViewOneWin);
+//    prepareTableView(ui->thirdMatchTableViewTwoWin);
+
+//    prepareTableView(ui->fourthMatchTableViewNoWin);
+//    prepareTableView(ui->fourthMatchTableViewOneWin);
+//    prepareTableView(ui->fourthMatchTableViewTwoWin);
+//    prepareTableView(ui->fourthMatchTableViewThreeWin);
 
     ui->submitScoreButton->setEnabled(false);
+
+    connect(ui->firstMatchTableView->selectionModel(),
+            SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            SLOT(firstViewSelected()));
 
     connect(ui->firstTeamRadioButton, SIGNAL(toggled(bool)), SLOT(setSubmitScoreButtonStateSlot()));
     connect(ui->secondTeamRadioButton, SIGNAL(toggled(bool)), SLOT(setSubmitScoreButtonStateSlot()));
@@ -114,13 +130,64 @@ void FourMatchesContestWidget::setUpWinnerSlot()
 
 void FourMatchesContestWidget::setUpWinnerFromSubmitButtonSlot()
 {
-    Match* selectedMatch = mFourMatchesContest->getCurrentMatchModel()->getRawData().at(
-      ui->firstMatchTableView->selectionModel()->currentIndex().row()
-    );
-    mFourMatchesContest->getCurrentMatchModel()->setFinished( selectedMatch, ui->firstTeamRadioButton->isChecked() );
-    if( mFourMatchesContest->isCurrentPhaseOver() ) {
-        emit currentPhaseOver();
-        ui->secondMatchTableViewNoWin->setModel( mFourMatchesContest->getCurrentMatchModel() );
-    }
+//    mCurrentSecetedView->model()->data(
+//        mCurrentSecetedView->selectionModel()->currentIndex()
+//    );
+//    mFourMatchesContest->getCurrentMatchModel()->setFinished(
+//                selectedMatch, ui->firstTeamRadioButton->isChecked() );
+//    if( mFourMatchesContest->isCurrentPhaseOver() ) {
+//        emit currentPhaseOver();
+//        ui->secondMatchTableViewNoWin->setModel( mFourMatchesContest->getCurrentMatchModel() );
+//    }
 
+}
+
+void FourMatchesContestWidget::firstViewSelected()
+{
+    mCurrentSecetedView = ui->firstMatchTableView;
+}
+
+void FourMatchesContestWidget::secondViewOneWinSelected()
+{
+    mCurrentSecetedView = ui->secondMatchTableViewOneWin;
+}
+
+void FourMatchesContestWidget::secondViewNoWinSelected()
+{
+    mCurrentSecetedView = ui->secondMatchTableViewNoWin;
+}
+
+void FourMatchesContestWidget::thirdViewTwoWinSelected()
+{
+    mCurrentSecetedView = ui->thirdMatchTableViewTwoWin;
+}
+
+void FourMatchesContestWidget::thirdViewOneWinSelected()
+{
+    mCurrentSecetedView = ui->thirdMatchTableViewOneWin;
+}
+
+void FourMatchesContestWidget::thirdViewNoWinSelected()
+{
+    mCurrentSecetedView = ui->thirdMatchTableViewNoWin;
+}
+
+void FourMatchesContestWidget::fourthViewThreeWinSelected()
+{
+    mCurrentSecetedView = ui->fourthMatchTableViewThreeWin;
+}
+
+void FourMatchesContestWidget::fourthViewTwoWinSelected()
+{
+    mCurrentSecetedView = ui->fourthMatchTableViewTwoWin;
+}
+
+void FourMatchesContestWidget::fourthViewOneWinSelected()
+{
+    mCurrentSecetedView = ui->fourthMatchTableViewOneWin;
+}
+
+void FourMatchesContestWidget::fourthViewNoWinSelected()
+{
+    mCurrentSecetedView = ui->fourthMatchTableViewNoWin;
 }
