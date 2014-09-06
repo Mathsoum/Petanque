@@ -16,7 +16,7 @@ public:
     void setName( const QString &name );
     void setClub( const QString &club );
 
-private:
+protected:
     QString mName;
     QString mClub;
 

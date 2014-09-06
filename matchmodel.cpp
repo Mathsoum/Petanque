@@ -31,33 +31,33 @@ int MatchModel::rowCount(const QModelIndex &parent) const
 
 QVariant MatchModel::data(const QModelIndex &index, int role) const
 {
-switch( role ) {
-  case Qt::DisplayRole:
-    return QVariant( index.column() == 0 ?
-                       mMatchList.at( index.row() )->teams().first.getName()
-                     : mMatchList.at( index.row() )->teams().second.getName() );
-    break;
-  case Qt::BackgroundRole:
-    if( data( index, Qt::DisplayRole ).toString().isEmpty() ) {
-      return QVariant( QBrush( Qt::Dense5Pattern ) );
-    } else if( mMatchList.at( index.row() )->isFinished() ) {
-      return ( mMatchList.at( index.row() )->getWinner().getName() == data( index, Qt::DisplayRole )) ?
-                    QBrush( QColor(105, 220, 140), Qt::Dense6Pattern )
-                  : QBrush( QColor(255, 128, 128), Qt::Dense6Pattern );
+    switch( role ) {
+      case Qt::DisplayRole:
+        return QVariant( index.column() == 0 ?
+                           mMatchList.at( index.row() )->teams().first.getName()
+                         : mMatchList.at( index.row() )->teams().second.getName() );
+        break;
+      case Qt::BackgroundRole:
+        if( data( index, Qt::DisplayRole ).toString().isEmpty() ) {
+          return QVariant( QBrush( Qt::Dense5Pattern ) );
+        } else if( mMatchList.at( index.row() )->isFinished() ) {
+          return ( mMatchList.at( index.row() )->getWinner().getName() == data( index, Qt::DisplayRole )) ?
+                        QBrush( QColor(105, 220, 140), Qt::Dense6Pattern )
+                      : QBrush( QColor(255, 128, 128), Qt::Dense6Pattern );
+        }
+        break;
+      case Qt::FontRole:
+        {
+          QFont font;
+          font.setBold( mMatchList.at( index.row() )->isFinished() );
+          return font;
+          break;
+        }
+      case Qt::TextAlignmentRole:
+        return QVariant( Qt::AlignCenter );
     }
-    break;
-  case Qt::FontRole:
-    {
-      QFont font;
-      font.setBold( mMatchList.at( index.row() )->isFinished() );
-      return font;
-      break;
-    }
-  case Qt::TextAlignmentRole:
-    return QVariant( Qt::AlignCenter );
-}
 
-return QVariant();
+    return QVariant();
 }
 
 QModelIndex MatchModel::index(int row, int column, const QModelIndex &) const

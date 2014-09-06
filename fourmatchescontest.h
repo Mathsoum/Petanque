@@ -4,9 +4,12 @@
 #include <QObject>
 
 #include "match.h"
+#include "fm_team.h"
 
-class MatchModel;
+class PhaseModel;
 
+//TODO Get rid of all the MatchModels for PhaseModels.
+// It's a start over, let's get messy !
 class FourMatchesContest : public QObject
 {
   Q_OBJECT
@@ -23,43 +26,30 @@ public:
   FourMatchesContest(QObject *parent = 0);
   ~FourMatchesContest();
 
-  MatchModel *getCurrentMatchModel() const;
-  QList<MatchModel *> getMatchModelList() const;
+  PhaseModel *getPhaseModel(int phase = 0, int winCount = 0) const;
 
   void initContest( void );
-
-  void addMatchToFirstPhase(const Team &firstTeam, const Team &secondTeam);
-  void addMatchToCurrentPhase(const Team &initialTeam, const Team &teamAvailable);
-  int currentPhase() const;
-
-  bool isCurrentPhaseOver() const;
-
-public slots:
-  void nextState();
+  void setFinished(int phase, FM_Team *winner, FM_Team *looser);
 
 private:
-  void generateNextMatchList();
-  void generateFirstMatchList();
-
-  QList<Team> teamsAvailableToPlayAgainst(const Team &team, const QList<Team> &teamsToPlayAgainst );
-  QList<Team> getTeamsAlreadyBeenExempt() const;
+  void addTeamToFirstPhase(FM_Team *team);
 
 private:
   State mState;
 
-  MatchModel* mFirstPhase;
+  PhaseModel* mFirstPhase;
 
-  MatchModel* mSecondPhaseOneWin;
-  MatchModel* mSecondPhaseNoWin;
+  PhaseModel* mSecondPhaseOneWin;
+  PhaseModel* mSecondPhaseNoWin;
 
-  MatchModel* mThirdPhaseTwoWin;
-  MatchModel* mThirdPhaseOneWin;
-  MatchModel* mThirdPhaseNoWin;
+  PhaseModel* mThirdPhaseTwoWin;
+  PhaseModel* mThirdPhaseOneWin;
+  PhaseModel* mThirdPhaseNoWin;
 
-  MatchModel* mFourthPhaseThreeWin;
-  MatchModel* mFourthPhaseTwoWin;
-  MatchModel* mFourthPhaseOneWin;
-  MatchModel* mFourthPhaseNoWin;
+  PhaseModel* mFourthPhaseThreeWin;
+  PhaseModel* mFourthPhaseTwoWin;
+  PhaseModel* mFourthPhaseOneWin;
+  PhaseModel* mFourthPhaseNoWin;
 };
 
 #endif // CONTEST_H

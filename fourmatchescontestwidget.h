@@ -6,6 +6,7 @@
 
 class QTableView;
 class FourMatchesContest;
+class FM_Team;
 
 namespace Ui {
 class FourMatchesContestWidget;
@@ -48,13 +49,15 @@ signals:
 private:
     void configGui();
     void prepareTableView(QTableView *tableViewToPrepare);
+    QVector<FM_Team *> getSelectedMatch() const;
 
 private:
     Ui::FourMatchesContestWidget *ui;
 
     FourMatchesContest* mFourMatchesContest;
 
-    QTableView* mCurrentSecetedView;
+    QTableView* mCurrentSelectedView;
+    int mCurrentSelectedPhase;
 };
 
 #endif // FOURMATCHESCONTESTWIDGET_H

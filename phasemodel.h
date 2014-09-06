@@ -1,24 +1,25 @@
 #ifndef PHASEMODEL_H
 #define PHASEMODEL_H
 
-#include <QAbstractItemModel>
-
 #include "fm_team.h"
+
+#include <QAbstractItemModel>
 
 class PhaseModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit PhaseModel(int currentPhase, int maxCount, QObject *parent = 0);
+    explicit PhaseModel(int maxCount = 0, QObject *parent = 0);
 
-    int columnCount(const QModelIndex &parent) const;
-    int rowCount(const QModelIndex &parent) const;
+    int columnCount(const QModelIndex &) const;
+    int rowCount(const QModelIndex &) const;
     QVariant data(const QModelIndex &index, int role) const;
 
-    QModelIndex index(int row, int column, const QModelIndex &parent) const;
-    QModelIndex parent(const QModelIndex &child) const;
+    QModelIndex index(int row, int column, const QModelIndex &) const;
+    QModelIndex parent(const QModelIndex &) const;
 
-
+    bool addTeam(FM_Team* team);
+    FM_Team *getTeam(const QModelIndex& index);
 signals:
 
 public slots:
@@ -27,8 +28,6 @@ private:
     QList<FM_Team*> mTeamList;
     int mMaxCount;
     int mCurrentPhase;
-
-
 };
 
 #endif // PHASEMODEL_H
