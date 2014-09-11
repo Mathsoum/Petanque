@@ -8,6 +8,62 @@
 
 #include <QDebug>
 
+void FourMatchesContestWidget::setupFirstPhaseView()
+{
+    ui->firstMatchTableView->setModel( mFourMatchesContest->getPhaseModel(0, 0) );
+    connect(ui->firstMatchTableView->selectionModel(),
+            SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+            SLOT(firstViewSelected()));
+}
+
+void FourMatchesContestWidget::setupSecondPhase()
+{
+    ui->secondMatchTableViewNoWin->setModel( mFourMatchesContest->getPhaseModel(1, 0) );
+    ui->secondMatchTableViewOneWin->setModel( mFourMatchesContest->getPhaseModel(1, 1) );
+    connect(ui->secondMatchTableViewNoWin->selectionModel(),
+            SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+            SLOT(secondViewNoWinSelected()));
+    connect(ui->secondMatchTableViewOneWin->selectionModel(),
+            SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+            SLOT(secondViewOneWinSelected()));
+}
+
+void FourMatchesContestWidget::setupThirdPhase()
+{
+    ui->thirdMatchTableViewNoWin->setModel( mFourMatchesContest->getPhaseModel(2, 0) );
+    ui->thirdMatchTableViewOneWin->setModel( mFourMatchesContest->getPhaseModel(2, 1) );
+    ui->thirdMatchTableViewTwoWin->setModel( mFourMatchesContest->getPhaseModel(2, 2) );
+    connect(ui->thirdMatchTableViewNoWin->selectionModel(),
+            SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+            SLOT(thirdViewNoWinSelected()));
+    connect(ui->thirdMatchTableViewOneWin->selectionModel(),
+            SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+            SLOT(thirdViewOneWinSelected()));
+    connect(ui->thirdMatchTableViewTwoWin->selectionModel(),
+            SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+            SLOT(thirdViewTwoWinSelected()));
+}
+
+void FourMatchesContestWidget::setupFourthPhase()
+{
+    ui->fourthMatchTableViewNoWin->setModel( mFourMatchesContest->getPhaseModel(3, 0) );
+    ui->fourthMatchTableViewOneWin->setModel( mFourMatchesContest->getPhaseModel(3, 1) );
+    ui->fourthMatchTableViewTwoWin->setModel( mFourMatchesContest->getPhaseModel(3, 2) );
+    ui->fourthMatchTableViewThreeWin->setModel( mFourMatchesContest->getPhaseModel(3, 3) );
+    connect(ui->fourthMatchTableViewNoWin->selectionModel(),
+            SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+            SLOT(fourthViewNoWinSelected()));
+    connect(ui->fourthMatchTableViewOneWin->selectionModel(),
+            SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+            SLOT(fourthViewOneWinSelected()));
+    connect(ui->fourthMatchTableViewTwoWin->selectionModel(),
+            SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+            SLOT(fourthViewTwoWinSelected()));
+    connect(ui->fourthMatchTableViewThreeWin->selectionModel(),
+            SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+            SLOT(fourthViewThreeWinSelected()));
+}
+
 FourMatchesContestWidget::FourMatchesContestWidget(QWidget *parent) :
   QWidget(parent),
   ui(new Ui::FourMatchesContestWidget)
@@ -17,19 +73,10 @@ FourMatchesContestWidget::FourMatchesContestWidget(QWidget *parent) :
   mFourMatchesContest = new FourMatchesContest();
   mFourMatchesContest->initContest();
 
-  ui->firstMatchTableView->setModel( mFourMatchesContest->getPhaseModel(0, 0) );
-
-  ui->secondMatchTableViewNoWin->setModel( mFourMatchesContest->getPhaseModel(1, 0) );
-  ui->secondMatchTableViewOneWin->setModel( mFourMatchesContest->getPhaseModel(1, 1) );
-
-  ui->thirdMatchTableViewNoWin->setModel( mFourMatchesContest->getPhaseModel(2, 0) );
-  ui->thirdMatchTableViewOneWin->setModel( mFourMatchesContest->getPhaseModel(2, 1) );
-  ui->thirdMatchTableViewTwoWin->setModel( mFourMatchesContest->getPhaseModel(2, 2) );
-
-  ui->fourthMatchTableViewNoWin->setModel( mFourMatchesContest->getPhaseModel(3, 0) );
-  ui->fourthMatchTableViewOneWin->setModel( mFourMatchesContest->getPhaseModel(3, 1) );
-  ui->fourthMatchTableViewTwoWin->setModel( mFourMatchesContest->getPhaseModel(3, 2) );
-  ui->fourthMatchTableViewThreeWin->setModel( mFourMatchesContest->getPhaseModel(3, 3) );
+  setupFirstPhaseView();
+  setupSecondPhase();
+  setupThirdPhase();
+  setupFourthPhase();
 
   configGui();
 }
@@ -79,10 +126,6 @@ void FourMatchesContestWidget::configGui()
 
     ui->submitScoreButton->setEnabled(false);
 
-    connect(ui->firstMatchTableView->selectionModel(),
-            SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            SLOT(firstViewSelected()));
-
     connect(ui->firstTeamRadioButton, SIGNAL(toggled(bool)), SLOT(setSubmitScoreButtonStateSlot()));
     connect(ui->secondTeamRadioButton, SIGNAL(toggled(bool)), SLOT(setSubmitScoreButtonStateSlot()));
     connect(ui->submitScoreButton, SIGNAL(clicked()), SLOT(setUpWinnerFromSubmitButtonSlot()));
@@ -93,11 +136,9 @@ FourMatchesContestWidget::~FourMatchesContestWidget()
   delete ui;
 }
 
-QList<QTableView*> FourMatchesContestWidget::getTableViewList() const
+FourMatchesContest *FourMatchesContestWidget::getContest() const
 {
-  QList<QTableView*> list;
-  list << ui->firstMatchTableView << ui->secondMatchTableViewNoWin << ui->thirdMatchTableViewNoWin << ui->fourthMatchTableViewNoWin;
-  return list;
+    return mFourMatchesContest;
 }
 
 void FourMatchesContestWidget::setSubmitScoreButtonStateSlot()
@@ -110,28 +151,34 @@ void FourMatchesContestWidget::setSubmitScoreButtonStateSlot()
 void FourMatchesContestWidget::teamViewSelectionChanged(const QModelIndex& selectedIndex)
 {
     qDebug() << "Team selection changed";
-    QModelIndex firstTeamIndex = ui->firstMatchTableView->model()->index(selectedIndex.row(), 0);
-    QModelIndex secondTeamIndex = ui->firstMatchTableView->model()->index(selectedIndex.row(), 1);
-
-    QString firstTeamName = ui->firstMatchTableView->model()->data(firstTeamIndex).toString();
-    QString secondTeamName = ui->firstMatchTableView->model()->data(secondTeamIndex).toString();
-
-    ui->firstTeamRadioButton->setText( firstTeamName );
-    ui->secondTeamRadioButton->setText( secondTeamName );
+    QModelIndex firstTeamIndex = mCurrentSelectedView->model()->index(selectedIndex.row(), 0);
+    QModelIndex secondTeamIndex = mCurrentSelectedView->model()->index(selectedIndex.row(), 1);
 
     FM_Team* firstSelectedTeam = ((PhaseModel*)mCurrentSelectedView->model())->getTeam(firstTeamIndex);
+    FM_Team* secondSelectedTeam = ((PhaseModel*)mCurrentSelectedView->model())->getTeam(secondTeamIndex);
 
-    if(firstSelectedTeam->hasPlayed(mCurrentSelectedPhase)) {
-        bool firstWins = firstSelectedTeam->hasWin(mCurrentSelectedPhase);
-        ui->firstTeamRadioButton->setChecked(firstWins);
-        ui->secondTeamRadioButton->setChecked(!firstWins);
-    } else {
-        ui->firstTeamRadioButton->setAutoExclusive(false);
-        ui->firstTeamRadioButton->setChecked(false);
-        ui->firstTeamRadioButton->setAutoExclusive(true);
-        ui->secondTeamRadioButton->setAutoExclusive(false);
-        ui->secondTeamRadioButton->setChecked(false);
-        ui->secondTeamRadioButton->setAutoExclusive(true);
+    QString firstRadioText = firstSelectedTeam != NULL ? firstSelectedTeam->getName() : "No Team";
+    QString secondRadioText = secondSelectedTeam != NULL ? secondSelectedTeam->getName() : "No Team";
+
+    ui->firstTeamRadioButton->setText( firstRadioText );
+    ui->secondTeamRadioButton->setText( secondRadioText );
+
+    ui->firstTeamRadioButton->setEnabled(firstSelectedTeam != NULL);
+    ui->secondTeamRadioButton->setEnabled(secondSelectedTeam != NULL);
+
+    if (firstSelectedTeam != NULL) {
+        if(firstSelectedTeam->hasPlayed(mCurrentSelectedPhase)) {
+            bool firstWins = firstSelectedTeam->hasWin(mCurrentSelectedPhase);
+            ui->firstTeamRadioButton->setChecked(firstWins);
+            ui->secondTeamRadioButton->setChecked(!firstWins);
+        } else {
+            ui->firstTeamRadioButton->setAutoExclusive(false);
+            ui->firstTeamRadioButton->setChecked(false);
+            ui->firstTeamRadioButton->setAutoExclusive(true);
+            ui->secondTeamRadioButton->setAutoExclusive(false);
+            ui->secondTeamRadioButton->setChecked(false);
+            ui->secondTeamRadioButton->setAutoExclusive(true);
+        }
     }
 }
 
@@ -167,60 +214,199 @@ void FourMatchesContestWidget::setUpWinnerFromSubmitButtonSlot()
 
 void FourMatchesContestWidget::firstViewSelected()
 {
+    qDebug() << "First view selected";
     mCurrentSelectedView = ui->firstMatchTableView;
     mCurrentSelectedPhase = 0;
+
+    ui->secondMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->secondMatchTableViewOneWin->selectionModel()->clearSelection();
+
+    ui->thirdMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewTwoWin->selectionModel()->clearSelection();
+
+    ui->fourthMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewTwoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewThreeWin->selectionModel()->clearSelection();
 }
 
 void FourMatchesContestWidget::secondViewOneWinSelected()
 {
+    qDebug() << "Second One view selected";
     mCurrentSelectedView = ui->secondMatchTableViewOneWin;
     mCurrentSelectedPhase = 1;
+
+    ui->firstMatchTableView->selectionModel()->clearSelection();
+
+    ui->secondMatchTableViewNoWin->selectionModel()->clearSelection();
+
+    ui->thirdMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewTwoWin->selectionModel()->clearSelection();
+
+    ui->fourthMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewTwoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewThreeWin->selectionModel()->clearSelection();
 }
 
 void FourMatchesContestWidget::secondViewNoWinSelected()
 {
+    qDebug() << "Second No view selected";
     mCurrentSelectedView = ui->secondMatchTableViewNoWin;
     mCurrentSelectedPhase = 1;
+
+    ui->firstMatchTableView->selectionModel()->clearSelection();
+
+    ui->secondMatchTableViewOneWin->selectionModel()->clearSelection();
+
+    ui->thirdMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewTwoWin->selectionModel()->clearSelection();
+
+    ui->fourthMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewTwoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewThreeWin->selectionModel()->clearSelection();
 }
 
 void FourMatchesContestWidget::thirdViewTwoWinSelected()
 {
+    qDebug() << "Third Two view selected";
     mCurrentSelectedView = ui->thirdMatchTableViewTwoWin;
     mCurrentSelectedPhase = 2;
+
+    ui->firstMatchTableView->selectionModel()->clearSelection();
+
+    ui->secondMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->secondMatchTableViewOneWin->selectionModel()->clearSelection();
+
+    ui->thirdMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewOneWin->selectionModel()->clearSelection();
+
+    ui->fourthMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewTwoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewThreeWin->selectionModel()->clearSelection();
 }
 
 void FourMatchesContestWidget::thirdViewOneWinSelected()
 {
+    qDebug() << "Third one view selected";
     mCurrentSelectedView = ui->thirdMatchTableViewOneWin;
     mCurrentSelectedPhase = 2;
+
+    ui->firstMatchTableView->selectionModel()->clearSelection();
+
+    ui->secondMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->secondMatchTableViewOneWin->selectionModel()->clearSelection();
+
+    ui->thirdMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewTwoWin->selectionModel()->clearSelection();
+
+    ui->fourthMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewTwoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewThreeWin->selectionModel()->clearSelection();
 }
 
 void FourMatchesContestWidget::thirdViewNoWinSelected()
 {
+    qDebug() << "Third no view selected";
     mCurrentSelectedView = ui->thirdMatchTableViewNoWin;
     mCurrentSelectedPhase = 2;
+
+    ui->firstMatchTableView->selectionModel()->clearSelection();
+
+    ui->secondMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->secondMatchTableViewOneWin->selectionModel()->clearSelection();
+
+    ui->thirdMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewTwoWin->selectionModel()->clearSelection();
+
+    ui->fourthMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewTwoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewThreeWin->selectionModel()->clearSelection();
 }
 
 void FourMatchesContestWidget::fourthViewThreeWinSelected()
 {
+    qDebug() << "Forth three view selected";
     mCurrentSelectedView = ui->fourthMatchTableViewThreeWin;
     mCurrentSelectedPhase = 3;
+
+    ui->firstMatchTableView->selectionModel()->clearSelection();
+
+    ui->secondMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->secondMatchTableViewOneWin->selectionModel()->clearSelection();
+
+    ui->thirdMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewTwoWin->selectionModel()->clearSelection();
+
+    ui->fourthMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewTwoWin->selectionModel()->clearSelection();
 }
 
 void FourMatchesContestWidget::fourthViewTwoWinSelected()
 {
+    qDebug() << "Forth two view selected";
     mCurrentSelectedView = ui->fourthMatchTableViewTwoWin;
     mCurrentSelectedPhase = 3;
+
+    ui->firstMatchTableView->selectionModel()->clearSelection();
+
+    ui->secondMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->secondMatchTableViewOneWin->selectionModel()->clearSelection();
+
+    ui->thirdMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewTwoWin->selectionModel()->clearSelection();
+
+    ui->fourthMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewThreeWin->selectionModel()->clearSelection();
 }
 
 void FourMatchesContestWidget::fourthViewOneWinSelected()
 {
+    qDebug() << "Forth one view selected";
     mCurrentSelectedView = ui->fourthMatchTableViewOneWin;
     mCurrentSelectedPhase = 3;
+
+    ui->firstMatchTableView->selectionModel()->clearSelection();
+
+    ui->secondMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->secondMatchTableViewOneWin->selectionModel()->clearSelection();
+
+    ui->thirdMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewTwoWin->selectionModel()->clearSelection();
+
+    ui->fourthMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewTwoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewThreeWin->selectionModel()->clearSelection();
 }
 
 void FourMatchesContestWidget::fourthViewNoWinSelected()
 {
+    qDebug() << "Forth no view selected";
     mCurrentSelectedView = ui->fourthMatchTableViewNoWin;
     mCurrentSelectedPhase = 3;
+
+    ui->firstMatchTableView->selectionModel()->clearSelection();
+
+    ui->secondMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->secondMatchTableViewOneWin->selectionModel()->clearSelection();
+
+    ui->thirdMatchTableViewNoWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->thirdMatchTableViewTwoWin->selectionModel()->clearSelection();
+
+    ui->fourthMatchTableViewOneWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewTwoWin->selectionModel()->clearSelection();
+    ui->fourthMatchTableViewThreeWin->selectionModel()->clearSelection();
 }

@@ -12,20 +12,21 @@ FourMatchesContest::FourMatchesContest(QObject *)
   mState = NOT_STARTED_YET;
 
   int teamCount = TeamModel::getInstance()->getRawData().size();
+  qDebug() << "Team count : " << teamCount;
 
-  mFirstPhase = new PhaseModel(teamCount);
+  mFirstPhase = new PhaseModel(teamCount, 0);
 
-  mSecondPhaseNoWin = new PhaseModel((teamCount / 2) + teamCount % 2);
-  mSecondPhaseOneWin = new PhaseModel(teamCount / 2);
+  mSecondPhaseNoWin = new PhaseModel((teamCount / 2) + teamCount % 2, 1);
+  mSecondPhaseOneWin = new PhaseModel(teamCount / 2, 1);
 
-  mThirdPhaseNoWin = new PhaseModel((teamCount / 4) + teamCount % 2);
-  mThirdPhaseOneWin = new PhaseModel(teamCount / 2);
-  mThirdPhaseTwoWin = new PhaseModel(teamCount / 4);
+  mThirdPhaseNoWin = new PhaseModel((teamCount / 4) + teamCount % 2, 2);
+  mThirdPhaseOneWin = new PhaseModel(teamCount / 2, 2);
+  mThirdPhaseTwoWin = new PhaseModel(teamCount / 4, 2);
 
-  mFourthPhaseNoWin = new PhaseModel((teamCount / 8) + teamCount % 2);
-  mFourthPhaseOneWin = new PhaseModel((3*teamCount) / 8);
-  mFourthPhaseTwoWin = new PhaseModel((3*teamCount) / 8);
-  mFourthPhaseThreeWin = new PhaseModel(teamCount / 8);
+  mFourthPhaseNoWin = new PhaseModel((teamCount / 8) + teamCount % 2, 3);
+  mFourthPhaseOneWin = new PhaseModel((3*teamCount) / 8, 3);
+  mFourthPhaseTwoWin = new PhaseModel((3*teamCount) / 8, 3);
+  mFourthPhaseThreeWin = new PhaseModel(teamCount / 8, 3);
 }
 
 FourMatchesContest::~FourMatchesContest()
@@ -51,7 +52,7 @@ void FourMatchesContest::initContest()
     Util<Team>::shuffle(&teamList);
 
     while(!teamList.isEmpty()) {
-        addTeamToFirstPhase(new FM_Team(teamList.at(0).getName(), teamList.at(0).getClub()));
+        addTeamToFirstPhase(FM_Team(teamList.at(0).getName(), teamList.at(0).getClub()));
         teamList.removeFirst();
     }
 }
@@ -97,14 +98,13 @@ void FourMatchesContest::setFinished(int phase, FM_Team* winner, FM_Team* loser)
     }
 }
 
-void FourMatchesContest::addTeamToFirstPhase(FM_Team* team)
+void FourMatchesContest::addTeamToFirstPhase(const FM_Team &team)
 {
-    mFirstPhase->addTeam(team);
+    mFirstPhase->addTeam(new FM_Team(team.getName(), team.getClub()));
 }
 
 PhaseModel *FourMatchesContest::getPhaseModel(int phase, int winCount) const
 {
-    qDebug() << "Get phase model";
     switch(phase) {
     case 0:
         return mFirstPhase;

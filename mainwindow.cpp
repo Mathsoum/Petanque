@@ -67,9 +67,6 @@ void MainWindow::generateMatchesSlot()
   mGenerateMatchesAction->setEnabled( false );
   menuBar()->removeAction(mTeamMenu->menuAction());
 
-  mFourMatchesContest = new FourMatchesContest();
-  mFourMatchesContest->initContest();
-
   mFourMatchesContestWidget = new FourMatchesContestWidget(this);
   setCentralWidget( mFourMatchesContestWidget );
   resize( mFourMatchesContestWidget->size() );
@@ -81,10 +78,6 @@ void MainWindow::generateMatchesSlot()
   mSetUpWinnerAction = contestMenu->addAction( "Saisir gagnant..." );
   mSetUpWinnerAction->setEnabled(false);
   connect( mSetUpWinnerAction, SIGNAL( triggered() ), this, SLOT( setUpWinnerSlot() ) );
-  connect( mFourMatchesContestWidget->getTableViewList().at(0)->selectionModel(),
-           SIGNAL( currentRowChanged( QModelIndex, QModelIndex ) ),
-           this,
-           SLOT( activeSetUpWinnerActionSlot( QModelIndex ) ) );
 }
 
 void MainWindow::activeEditTeamSlot( const QModelIndex& index  )

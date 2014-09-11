@@ -38,7 +38,6 @@ private:
   FourMatchesContestWidget* mFourMatchesContestWidget;
 
   QString mNewTeamName;
-  FourMatchesContest* mFourMatchesContest;
 
   QMenu* mActionMenu;
   QMenu* mTeamMenu;

@@ -20,8 +20,12 @@ public:
     explicit FourMatchesContestWidget(QWidget *parent = 0);
     ~FourMatchesContestWidget();
 
-    QList<QTableView*> getTableViewList() const;
+    FourMatchesContest* getContest() const;
 
+    void setupFirstPhaseView();
+    void setupSecondPhase();
+    void setupThirdPhase();
+    void setupFourthPhase();
 public slots:
     void setSubmitScoreButtonStateSlot();
     void teamViewSelectionChanged(const QModelIndex &selectedIndex);

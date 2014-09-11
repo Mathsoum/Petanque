@@ -32,7 +32,7 @@ public:
   void setFinished(int phase, FM_Team *winner, FM_Team *looser);
 
 private:
-  void addTeamToFirstPhase(FM_Team *team);
+  void addTeamToFirstPhase(const FM_Team& team);
 
 private:
   State mState;
