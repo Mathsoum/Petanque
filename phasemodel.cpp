@@ -71,15 +71,14 @@ QModelIndex PhaseModel::parent(const QModelIndex &/*child*/) const
 
 bool PhaseModel::addTeam(FM_Team* team)
 {
-    if (mMaxCount == mTeamCount) {
-        return false;
-    }
-
     if (!mTeamList.contains(team)) {
         beginInsertRows(QModelIndex(), mTeamList.size(), mTeamList.size());
         mTeamList.replace(mTeamCount, team);
 //      qDebug() << "Team #" << mTeamCount << "added : " << team->getName();
         mTeamCount++;
+        if (mMaxCount == mTeamCount) {
+            team->setWinForPhase(mCurrentPhase);
+        }
         endInsertRows();
     }
 

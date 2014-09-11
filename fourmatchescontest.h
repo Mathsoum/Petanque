@@ -30,6 +30,7 @@ public:
 
   void initContest( void );
   void setFinished(int phase, FM_Team *winner, FM_Team *looser);
+  void setExempt(int phase, FM_Team *exemptTeam);
 
 private:
   void addTeamToFirstPhase(const FM_Team& team);

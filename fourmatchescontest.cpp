@@ -98,9 +98,45 @@ void FourMatchesContest::setFinished(int phase, FM_Team* winner, FM_Team* loser)
     }
 }
 
+void FourMatchesContest::setExempt(int phase, FM_Team *exemptTeam)
+{
+    qDebug() << "Set exempt";
+    switch(phase) {
+    case 0:
+        qDebug() << "Phase 0";
+        mSecondPhaseOneWin->addTeam(exemptTeam);
+        break;
+    case 1:
+        qDebug() << "Phase 1";
+        if(exemptTeam->getWinCount() == 1) {
+            mThirdPhaseOneWin->addTeam(exemptTeam);
+        } else {
+            mThirdPhaseTwoWin->addTeam(exemptTeam);
+        }
+        break;
+    case 2:
+        qDebug() << "Phase 2";
+        if (exemptTeam->getWinCount() == 1) {
+            mFourthPhaseOneWin->addTeam(exemptTeam);
+        } else if (exemptTeam->getWinCount() == 2) {
+            mFourthPhaseTwoWin->addTeam(exemptTeam);
+        } else {
+            mFourthPhaseThreeWin->addTeam(exemptTeam);
+        }
+        break;
+    case 3:
+        qDebug() << "Phase 3";
+        break;
+    }
+}
+
 void FourMatchesContest::addTeamToFirstPhase(const FM_Team &team)
 {
-    mFirstPhase->addTeam(new FM_Team(team.getName(), team.getClub()));
+    FM_Team* newTeam = new FM_Team(team.getName(), team.getClub());
+    mFirstPhase->addTeam(newTeam);
+    if (newTeam->hasWin(0)) {
+        setExempt(0, newTeam);
+    }
 }
 
 PhaseModel *FourMatchesContest::getPhaseModel(int phase, int winCount) const
