@@ -97,28 +97,8 @@ void MainWindow::activeSetUpWinnerActionSlot( const QModelIndex& index )
 
 void MainWindow::createTestModel( TeamModel* model, bool even )
 {
-  model->addTeam( Team( "A" ) );
-  model->addTeam( Team( "D" ) );
-  model->addTeam( Team( "B" ) );
-  model->addTeam( Team( "C" ) );
-  model->addTeam( Team( "R" ) );
-  model->addTeam( Team( "Z" ) );
-  model->addTeam( Team( "E" ) );
-  model->addTeam( Team( "T" ) );
-  model->addTeam( Team( "S" ) );
-  model->addTeam( Team( "Q" ) );
-  model->addTeam( Team( "F" ) );
-  model->addTeam( Team( "G" ) );
-  model->addTeam( Team( "H" ) );
-  model->addTeam( Team( "Y" ) );
-  model->addTeam( Team( "J" ) );
-  model->addTeam( Team( "U" ) );
-  model->addTeam( Team( "I" ) );
-  model->addTeam( Team( "K" ) );
-  model->addTeam( Team( "L" ) );
-  model->addTeam( Team( "O" ) );
-  if( !even ) {
-    model->addTeam( Team( "V" ) );
-  }
+    for(int i = 0; i < (even ? 100 : 101); ++i) {
+        model->addTeam( QString('A' + rand()%26) );
+    }
 }
 

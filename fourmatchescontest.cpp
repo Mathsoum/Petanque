@@ -14,19 +14,31 @@ FourMatchesContest::FourMatchesContest(QObject *)
   int teamCount = TeamModel::getInstance()->getRawData().size();
   qDebug() << "Team count : " << teamCount;
 
-  mFirstPhase = new PhaseModel(teamCount, 0);
+  int n0 = teamCount;
+  mFirstPhase = new PhaseModel(n0, 0);
 
-  mSecondPhaseNoWin = new PhaseModel((teamCount / 2) + teamCount % 2, 1);
-  mSecondPhaseOneWin = new PhaseModel(teamCount / 2, 1);
+  int n11 = (n0 / 2) + (n0 % 2);
+  int n10 = (n0 / 2);
+  mSecondPhaseNoWin = new PhaseModel(n11, 1);
+  mSecondPhaseOneWin = new PhaseModel(n10, 1);
 
-  mThirdPhaseNoWin = new PhaseModel((teamCount / 4) + teamCount % 2, 2);
-  mThirdPhaseOneWin = new PhaseModel(teamCount / 2, 2);
-  mThirdPhaseTwoWin = new PhaseModel(teamCount / 4, 2);
+  int n22 = (n11 / 2) + (n11 % 2);
+  int n21 = (n11 / 2) + (n10 / 2) + (n10 % 2);
+  int n20 = (n10 / 2);
+  mThirdPhaseNoWin = new PhaseModel(n22, 2);
+  mThirdPhaseOneWin = new PhaseModel(n21, 2);
+  mThirdPhaseTwoWin = new PhaseModel(n20, 2);
 
-  mFourthPhaseNoWin = new PhaseModel((teamCount / 8) + teamCount % 2, 3);
-  mFourthPhaseOneWin = new PhaseModel((3*teamCount) / 8, 3);
-  mFourthPhaseTwoWin = new PhaseModel((3*teamCount) / 8, 3);
-  mFourthPhaseThreeWin = new PhaseModel(teamCount / 8, 3);
+  int n33 = (n22 / 2) + (n22 % 2);
+  int n32 = (n22 / 2) + (n21 / 2);
+  n32 +=  + (n32 % 2);
+  int n31 = (n21 / 2) + (n20 / 2);
+  n31 -=  + (n31 % 2);
+  int n30 = (n20 / 2);
+  mFourthPhaseNoWin = new PhaseModel(n33, 3);
+  mFourthPhaseOneWin = new PhaseModel(n32, 3);
+  mFourthPhaseTwoWin = new PhaseModel(n31, 3);
+  mFourthPhaseThreeWin = new PhaseModel(n30, 3);
 }
 
 FourMatchesContest::~FourMatchesContest()
@@ -59,42 +71,46 @@ void FourMatchesContest::initContest()
 
 void FourMatchesContest::setFinished(int phase, FM_Team* winner, FM_Team* loser)
 {
-    qDebug() << "Set finished";
-    winner->setWinForPhase(phase);
-    loser->setLoseForPhase(phase);
+    if (loser == NULL) {
+        setExempt(phase, winner);
+    } else {
+        qDebug() << "Set finished";
+        winner->setWinForPhase(phase);
+        loser->setLoseForPhase(phase);
 
-    switch(phase) {
-    case 0:
-        qDebug() << "Phase 0";
-        mSecondPhaseOneWin->addTeam(winner);
-        mSecondPhaseNoWin->addTeam(loser);
-        break;
-    case 1:
-        qDebug() << "Phase 1";
-        if(winner->getWinCount() == 1) {
-            mThirdPhaseOneWin->addTeam(winner);
-            mThirdPhaseNoWin->addTeam(loser);
-        } else {
-            mThirdPhaseTwoWin->addTeam(winner);
-            mThirdPhaseOneWin->addTeam(loser);
+        switch(phase) {
+        case 0:
+            qDebug() << "Phase 0";
+            mSecondPhaseOneWin->addTeam(winner);
+            mSecondPhaseNoWin->addTeam(loser);
+            break;
+        case 1:
+            qDebug() << "Phase 1";
+            if(winner->getWinCount() == 1) {
+                mThirdPhaseOneWin->addTeam(winner);
+                mThirdPhaseNoWin->addTeam(loser);
+            } else {
+                mThirdPhaseTwoWin->addTeam(winner);
+                mThirdPhaseOneWin->addTeam(loser);
+            }
+            break;
+        case 2:
+            qDebug() << "Phase 2";
+            if (winner->getWinCount() == 1) {
+                mFourthPhaseOneWin->addTeam(winner);
+                mFourthPhaseNoWin->addTeam(loser);
+            } else if (winner->getWinCount() == 2) {
+                mFourthPhaseTwoWin->addTeam(winner);
+                mFourthPhaseOneWin->addTeam(loser);
+            } else {
+                mFourthPhaseThreeWin->addTeam(winner);
+                mFourthPhaseTwoWin->addTeam(loser);
+            }
+            break;
+        case 3:
+            qDebug() << "Phase 3";
+            break;
         }
-        break;
-    case 2:
-        qDebug() << "Phase 2";
-        if (winner->getWinCount() == 1) {
-            mFourthPhaseOneWin->addTeam(winner);
-            mFourthPhaseNoWin->addTeam(loser);
-        } else if (winner->getWinCount() == 2) {
-            mFourthPhaseTwoWin->addTeam(winner);
-            mFourthPhaseOneWin->addTeam(loser);
-        } else {
-            mFourthPhaseThreeWin->addTeam(winner);
-            mFourthPhaseTwoWin->addTeam(loser);
-        }
-        break;
-    case 3:
-        qDebug() << "Phase 3";
-        break;
     }
 }
 
