@@ -25,10 +25,15 @@ signals:
 public slots:
 
 private:
+    static const QString DBG_NO_TEAM;
+    static const QString DBG_EMPTY_CELL;
+
+
     QList<FM_Team*> mTeamList;
     int mMaxCount;
     int mTeamCount;
     int mCurrentPhase;
 };
+
 
 #endif // PHASEMODEL_H

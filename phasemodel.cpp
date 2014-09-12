@@ -4,6 +4,9 @@
 #include <QDebug>
 #include <QList>
 
+const QString PhaseModel::DBG_NO_TEAM = QStringLiteral("<No team>");
+const QString PhaseModel::DBG_EMPTY_CELL = QStringLiteral("<Empty cell>");
+
 PhaseModel::PhaseModel(int maxCount, int phase, QObject *parent) :
     QAbstractItemModel(parent)
 {
@@ -35,9 +38,9 @@ QVariant PhaseModel::data(const QModelIndex &index, int role) const
     switch(role) {
     case Qt::DisplayRole:
         if(listIndex >= mMaxCount) {
-            return QString("Empty cell");
+            return DBG_EMPTY_CELL;
         } else {
-            return mTeamList.at(listIndex) != NULL ? mTeamList.at(listIndex)->getName() : QString("NULL");
+            return mTeamList.at(listIndex) != NULL ? mTeamList.at(listIndex)->getName() : DBG_NO_TEAM;
         }
         break;
     case Qt::TextAlignmentRole:
