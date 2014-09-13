@@ -7,11 +7,12 @@
 const QString PhaseModel::DBG_NO_TEAM = QStringLiteral("<No team>");
 const QString PhaseModel::DBG_EMPTY_CELL = QStringLiteral("<Empty cell>");
 
-PhaseModel::PhaseModel(int maxCount, int phase, QObject *parent) :
+PhaseModel::PhaseModel(int maxCount, int phase, PhaseModel *nextPhaseIfWin, QObject *parent) :
     QAbstractItemModel(parent)
 {
     mMaxCount = maxCount;
     mTeamCount = 0;
+    mNextPhaseIfWin = nextPhaseIfWin;
     mCurrentPhase = phase;
     for(int i = 0; i < mMaxCount; ++i) {
         mTeamList.append(NULL);
@@ -75,12 +76,17 @@ QModelIndex PhaseModel::parent(const QModelIndex &/*child*/) const
 bool PhaseModel::addTeam(FM_Team* team) //TODO Remove return type (useless)
 {
     if (!mTeamList.contains(team)) {
+        int randomIndex = -1;
+        do {
+            randomIndex = rand() % mMaxCount;
+        } while (mTeamList.at(randomIndex) != NULL);
         beginResetModel();
-        mTeamList.replace(mTeamCount, team);
+        mTeamList.replace(randomIndex, team);
 //      qDebug() << "Team #" << mTeamCount << "added : " << team->getName();
         mTeamCount++;
-        if (mMaxCount == mTeamCount && (mMaxCount % 2) > 0) {
+        if (mMaxCount-1 == randomIndex && (mMaxCount % 2) > 0) {
             team->setWinForPhase(mCurrentPhase);
+            if (mNextPhaseIfWin != NULL) { mNextPhaseIfWin->addTeam(team); }
         }
         endResetModel();
     }

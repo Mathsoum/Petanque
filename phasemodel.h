@@ -9,7 +9,7 @@ class PhaseModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit PhaseModel(int maxCount = 0, int phase = 0, QObject *parent = 0);
+    explicit PhaseModel(int maxCount = 0, int phase = 0, PhaseModel* nextPhaseIfWin = NULL, QObject *parent = 0);
 
     int columnCount(const QModelIndex &) const;
     int rowCount(const QModelIndex &) const;
@@ -29,6 +29,7 @@ private:
     static const QString DBG_EMPTY_CELL;
 
 
+    PhaseModel* mNextPhaseIfWin;
     QList<FM_Team*> mTeamList;
     int mMaxCount;
     int mTeamCount;

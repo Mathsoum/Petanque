@@ -55,7 +55,7 @@ QVariant TeamModel::data(const QModelIndex &index, int role) const
   return QVariant();
 }
 
-bool TeamModel::setData( const QModelIndex &index, const QVariant &value, int role )
+bool TeamModel::setData( const QModelIndex &index, const QVariant &value, int /*role*/ )
 {
   if( !index.isValid() ) {
     return false;

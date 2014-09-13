@@ -15,19 +15,13 @@ FourMatchesContest::FourMatchesContest(QObject *)
   qDebug() << "Team count : " << teamCount;
 
   int n0 = teamCount;
-  mFirstPhase = new PhaseModel(n0, 0);
 
   int n11 = (n0 / 2) + (n0 % 2);
   int n10 = (n0 / 2);
-  mSecondPhaseOneWin = new PhaseModel(n11, 1);
-  mSecondPhaseNoWin = new PhaseModel(n10, 1);
 
   int n22 = (n11 / 2) + (n11 % 2);
   int n21 = (n11 / 2) + (n10 / 2) + (n10 % 2);
   int n20 = (n10 / 2);
-  mThirdPhaseTwoWin = new PhaseModel(n22, 2);
-  mThirdPhaseOneWin = new PhaseModel(n21, 2);
-  mThirdPhaseNoWin = new PhaseModel(n20, 2);
 
   int n33 = (n22 / 2) + (n22 % 2);
   int n32 = (n22 / 2) + (n21 / 2);
@@ -35,10 +29,20 @@ FourMatchesContest::FourMatchesContest(QObject *)
   int n31 = (n21 / 2) + (n20 / 2);
   n31 -=  + (n31 % 2);
   int n30 = (n20 / 2);
+
   mFourthPhaseThreeWin = new PhaseModel(n33, 3);
   mFourthPhaseTwoWin = new PhaseModel(n32, 3);
   mFourthPhaseOneWin = new PhaseModel(n31, 3);
   mFourthPhaseNoWin = new PhaseModel(n30, 3);
+
+  mThirdPhaseTwoWin = new PhaseModel(n22, 2, mFourthPhaseThreeWin);
+  mThirdPhaseOneWin = new PhaseModel(n21, 2, mFourthPhaseTwoWin);
+  mThirdPhaseNoWin = new PhaseModel(n20, 2, mFourthPhaseOneWin);
+
+  mSecondPhaseOneWin = new PhaseModel(n11, 1, mThirdPhaseTwoWin);
+  mSecondPhaseNoWin = new PhaseModel(n10, 1, mThirdPhaseOneWin);
+
+  mFirstPhase = new PhaseModel(n0, 0, mSecondPhaseOneWin);
 }
 
 FourMatchesContest::~FourMatchesContest()
