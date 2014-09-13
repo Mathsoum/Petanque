@@ -79,7 +79,7 @@ bool PhaseModel::addTeam(FM_Team* team) //TODO Remove return type (useless)
         mTeamList.replace(mTeamCount, team);
 //      qDebug() << "Team #" << mTeamCount << "added : " << team->getName();
         mTeamCount++;
-        if (mMaxCount == mTeamCount) {
+        if (mMaxCount == mTeamCount && (mMaxCount % 2) > 0) {
             team->setWinForPhase(mCurrentPhase);
         }
         endResetModel();
